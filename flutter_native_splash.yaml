@@ -1,0 +1,14 @@
+# flutter_native_splash
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/images/tricycle.jpg
+  branding: assets/images/tricycle.jpg
+  color_dark: "#121212"
+  image_dark: assets/images/tricycle.jpg
+  branding_dark: assets/images/tricycle.jpg
+
+  android_12:
+    image: assets/images/tricycle.jpg
+    icon_background_color: "#ffffff"
+    image_dark: assets/images/tricycle.jpg
+    icon_background_color_dark: "#121212"
