@@ -1,0 +1,81 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:gap/gap.dart';
+import 'package:trikecraft/base/assets/app_fonts.dart';
+import 'package:trikecraft/base/routes/app_routes.dart';
+
+class SplashPage extends StatefulWidget {
+  const SplashPage({super.key});
+
+  @override
+  State<SplashPage> createState() => _SplashPageState();
+}
+
+class _SplashPageState extends State<SplashPage> {
+  int spTime = 4;
+
+  @override
+  void initState() {
+    super.initState();
+    redirect();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // SvgPicture.asset(AppSvgs.splashLogoLight),
+            Image.asset("assets/images/tricycle.jpg"),
+
+            Container(
+              height: 0.15.sh,
+              width: 0.4.sw,
+              alignment: Alignment.center,
+              child: Stack(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(bottom: 12.sp),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "Trike",
+                        style: TextStyle(
+                          fontSize: 35.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Text(
+                      " Craft",
+                      style: TextStyle(
+                          fontSize: 45.sp,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: AppFonts.poppins),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  // --- Methods
+  // Redirect to next page
+  Future<void> redirect() async {
+    await Future.delayed(Duration(seconds: spTime));
+    Navigator.pushReplacementNamed(context, AppRoutes.landingRoute);
+  }
+}
