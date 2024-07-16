@@ -8,6 +8,7 @@ import 'package:trikecraft/presentation/auth/widgets/auth_button_widget.dart';
 import 'package:trikecraft/presentation/auth/widgets/auth_forgot_password_button.dart';
 import 'package:trikecraft/presentation/auth/widgets/auth_page_bottom_buttons_widget.dart';
 import 'package:trikecraft/presentation/auth/widgets/auth_page_heading_widget.dart';
+import 'package:trikecraft/utils/email_validator_extension.dart';
 
 import '../widgets/auth_form_field_widget.dart';
 import '../widgets/neon_landscape_bg_widget.dart';
@@ -52,7 +53,7 @@ class _SignUpPageState extends State<SignInPage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Gap(0.03.sh),
-                
+
                         //-- Sign In Heading
                         FadeInDown(
                           child: AuthPageHeadingWidget(
@@ -60,9 +61,9 @@ class _SignUpPageState extends State<SignInPage> {
                             text: "Let's connect with us",
                           ),
                         ),
-                
+
                         Gap(0.03.sh),
-                
+
                         //---  Email Field
                         BounceInDown(
                           child: AuthFormFieldWidget(
@@ -92,24 +93,24 @@ class _SignUpPageState extends State<SignInPage> {
                                       )),
                           ),
                         ),
-                
+
                         ///---- Forget Password
                         FadeInRight(
                           child: AuthForgotPasswordButton(
-                            onPressed: () {},
+                            onPressed: forgotPasswordMethod,
                           ),
                         ),
-                
+
                         Gap(0.03.sh),
-                
+
                         ///--- Sign In Button
                         FadeInUpBig(
                           child: AuthButtonWidget(
                               title: "Sign In",
                               showGoogleIcon: false,
-                              onTap: () {}),
+                              onTap: signInButton),
                         ),
-                
+
                         Gap(0.02.sh),
                         FadeOut(
                           child: const Text(
@@ -117,9 +118,9 @@ class _SignUpPageState extends State<SignInPage> {
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
-                
+
                         Gap(0.02.sh),
-                
+
                         ///--- Sign In Button
                         FadeInUp(
                           child: AuthButtonWidget(
@@ -128,16 +129,15 @@ class _SignUpPageState extends State<SignInPage> {
                             onTap: () {},
                           ),
                         ),
-                
+
                         Gap(0.03.sh),
-                
+
                         ///--- Bottom Nav Buttons
                         AuthPageBottomButtonsWidget(
-                            firstTitle: 'New to TrikeCraft?',
-                            buttonTitle: "Join Now",
-                            buttonOnPressed: joinNowButtonOnPressed,
-                          ),
-                        
+                          firstTitle: 'New to TrikeCraft?',
+                          buttonTitle: "Join Now",
+                          buttonOnPressed: joinNowButtonOnPressed,
+                        ),
                       ],
                     ),
                   ),
@@ -153,5 +153,18 @@ class _SignUpPageState extends State<SignInPage> {
   //---------- Methods ---------///
   void joinNowButtonOnPressed() {
     Navigator.pushNamed(context, AppRoutes.signUpRoute);
+  }
+
+  void forgotPasswordMethod() {
+    Navigator.pushNamed(context, AppRoutes.forgotPasswordRoute);
+  }
+
+  void signInButton(){
+     final email = _emailController.text.toString().trim();
+    if (email.isValidEmail()) {
+      print("The email is valid.");
+    } else {
+      print("The email is invalid.");
+    }
   }
 }

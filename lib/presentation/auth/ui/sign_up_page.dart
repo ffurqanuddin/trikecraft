@@ -5,9 +5,9 @@ import 'package:gap/gap.dart';
 import 'package:trikecraft/base/routes/app_routes.dart';
 import 'package:trikecraft/common/glass_gradient_card_widget.dart';
 import 'package:trikecraft/presentation/auth/widgets/auth_button_widget.dart';
-import 'package:trikecraft/presentation/auth/widgets/auth_forgot_password_button.dart';
 import 'package:trikecraft/presentation/auth/widgets/auth_page_bottom_buttons_widget.dart';
 import 'package:trikecraft/presentation/auth/widgets/auth_page_heading_widget.dart';
+import 'package:trikecraft/utils/email_validator_extension.dart';
 
 import '../widgets/auth_form_field_widget.dart';
 import '../widgets/neon_landscape_bg_widget.dart';
@@ -56,7 +56,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         Gap(0.03.sh),
-                
+
                         //-- Sign Up Heading
                         FadeInDown(
                           child: AuthPageHeadingWidget(
@@ -64,9 +64,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             text: "Let's connect with us",
                           ),
                         ),
-                
+
                         Gap(0.03.sh),
-                
+
                         //---  Full Field
                         FadeInDown(
                           child: AuthFormFieldWidget(
@@ -127,17 +127,17 @@ class _SignUpPageState extends State<SignUpPage> {
                                       )),
                           ),
                         ),
-                
+
                         Gap(0.03.sh),
-                
+
                         ///--- Sign Up Button
                         FadeInUpBig(
                           child: AuthButtonWidget(
                               title: "Sign Up",
                               showGoogleIcon: false,
-                              onTap: () {}),
+                              onTap: signUpButton),
                         ),
-                
+
                         Gap(0.02.sh),
                         FadeOut(
                           child: const Text(
@@ -145,10 +145,10 @@ class _SignUpPageState extends State<SignUpPage> {
                             style: TextStyle(color: Colors.white),
                           ),
                         ),
-                
+
                         Gap(0.02.sh),
-                
-                        ///--- Sign Up Button
+
+                        ///--- Sign Up with Google Button
                         FadeInUp(
                           child: AuthButtonWidget(
                             showGoogleIcon: true,
@@ -156,9 +156,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             onTap: () {},
                           ),
                         ),
-                
+
                         Gap(0.03.sh),
-                
+
                         ///--- Bottom Nav Buttons
                         AuthPageBottomButtonsWidget(
                           firstTitle: 'Already In TrikeCraft?',
@@ -180,5 +180,14 @@ class _SignUpPageState extends State<SignUpPage> {
   //---------- Methods ---------///
   void loginNowButtonOnPressed() {
     Navigator.pushNamed(context, AppRoutes.signInRoute);
+  }
+
+  void signUpButton() {
+    final email = _emailController.text.toString().trim();
+    if (email.isValidEmail()) {
+      print("The email is valid.");
+    } else {
+      print("The email is invalid.");
+    }
   }
 }

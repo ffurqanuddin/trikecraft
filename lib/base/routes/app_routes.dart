@@ -7,4 +7,6 @@ class AppRoutes {
   static const String signInRoute = '/sign_in';
   static const String dashboardRoute = '/dashboard';
   static const String settingRoute = '/setting';
+  static const String forgotPasswordRoute = '/forgot_password';
+
 }

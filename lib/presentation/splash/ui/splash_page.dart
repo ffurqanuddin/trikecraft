@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:gap/gap.dart';
 import 'package:trikecraft/base/assets/app_fonts.dart';
 import 'package:trikecraft/base/routes/app_routes.dart';
 
@@ -19,6 +17,8 @@ class _SplashPageState extends State<SplashPage> {
   @override
   void initState() {
     super.initState();
+    //Remove the native splash screen
+    FlutterNativeSplash.remove();
     redirect();
   }
 
@@ -52,7 +52,6 @@ class _SplashPageState extends State<SplashPage> {
                       ),
                     ),
                   ),
-                  
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Text(
@@ -76,6 +75,10 @@ class _SplashPageState extends State<SplashPage> {
   // Redirect to next page
   Future<void> redirect() async {
     await Future.delayed(Duration(seconds: spTime));
-    Navigator.pushReplacementNamed(context, AppRoutes.landingRoute);
+    Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoutes.landingRoute,
+      (route) => true,
+    );
   }
 }

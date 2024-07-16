@@ -9,7 +9,7 @@ import 'package:trikecraft/presentation/landing/widgets/get_started_button_widge
 import 'package:trikecraft/presentation/landing/widgets/landing_page_indicators_widget.dart';
 import 'package:trikecraft/presentation/landing/widgets/landing_page_widget.dart';
 
-import '../../../data/models/landing_page_items_model.dart';
+import '../../../models/landing_page_items_model.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
