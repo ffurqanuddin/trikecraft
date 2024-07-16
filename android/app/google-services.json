@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "315347300277",
+    "project_id": "trikecraft-c6edd",
+    "storage_bucket": "trikecraft-c6edd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:315347300277:android:460ddbbec4a2dd567ab3fc",
+        "android_client_info": {
+          "package_name": "com.lyrilab.trikecraft"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "315347300277-gaoau8h4af76vdtqi5h63lcgqmucb0vf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lyrilab.trikecraft",
+            "certificate_hash": "3ced37237365b7744c273b07b95cac414c301ed1"
+          }
+        },
+        {
+          "client_id": "315347300277-h2erp7e6j325jkchnrt5f72mt0v3012r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBR4BrdMLqIb5Vo6d3jGEpZex_Hp0wBwk4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "315347300277-h2erp7e6j325jkchnrt5f72mt0v3012r.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "315347300277-h0j14vap1185hkobljqnc9hamusi8c8k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lyrilab.trikecraft"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

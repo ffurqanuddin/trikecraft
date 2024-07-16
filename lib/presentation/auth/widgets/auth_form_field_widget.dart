@@ -43,6 +43,7 @@ class _AuthFormFieldWidgetState extends State<AuthFormFieldWidget> {
           hintText: widget.hintText,
           border: InputBorder.none,
           suffix: widget.suffix,
+          errorStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.w500)
         ),
       ),
     );

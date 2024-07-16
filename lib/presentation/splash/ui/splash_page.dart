@@ -3,6 +3,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trikecraft/base/assets/app_fonts.dart';
 import 'package:trikecraft/base/routes/app_routes.dart';
+import 'package:trikecraft/base/services/hive/hive_services.dart';
 
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
@@ -30,9 +31,7 @@ class _SplashPageState extends State<SplashPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // SvgPicture.asset(AppSvgs.splashLogoLight),
             Image.asset("assets/images/tricycle.jpg"),
-
             Container(
               height: 0.15.sh,
               width: 0.4.sw,
@@ -75,10 +74,19 @@ class _SplashPageState extends State<SplashPage> {
   // Redirect to next page
   Future<void> redirect() async {
     await Future.delayed(Duration(seconds: spTime));
-    Navigator.pushNamedAndRemoveUntil(
+    if(await MyHiveBoxes.settingBox.get(MyHiveKeys.userIsLoggedIn) == true){
+         Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoutes.homeRoute,
+      (route) => true,
+    );
+    } else{
+  Navigator.pushNamedAndRemoveUntil(
       context,
       AppRoutes.landingRoute,
       (route) => true,
     );
+    }
+  
   }
 }

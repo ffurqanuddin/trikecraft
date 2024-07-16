@@ -7,13 +7,10 @@ class MyHive {
     final appDocumentDirectory =
         await path_provider.getApplicationDocumentsDirectory();
     Hive.init(appDocumentDirectory.path);
-    
 
     //! Open the setting box
     MyHiveBoxes.settingBox = await Hive.openBox('setting');
   }
-
-
 }
 
 ///!----------------    MyHive Boxes
@@ -23,6 +20,9 @@ class MyHiveBoxes {
 
 ///!---------------      MyHive Keys
 class MyHiveKeys {
+  static const String userIsLoggedIn = "user_is_logged_in";
+  static const String isAdminLoggedIn = "user_is_admin";
+
   static const String darkModeHiveKey = "hive_dark_mode";
   static const String blackModeHiveKey = "hive_black_mode";
   static const String themeAccentColorHiveKey = "hive_theme_accent_color";
