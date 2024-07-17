@@ -12,6 +12,7 @@ class UserModel {
   final String email;
   final String profilePicture;
   final String userId;
+  
 
   // Factory method to create a UserModel from a Firestore document
   factory UserModel.fromFirestore(DocumentSnapshot doc) {

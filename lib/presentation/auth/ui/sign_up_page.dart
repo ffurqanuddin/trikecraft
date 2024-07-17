@@ -50,7 +50,7 @@ class _SignUpPageState extends State<SignUpPage> {
             if (state is AuthSuccessState) {
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                AppRoutes.homeRoute,
+                AppRoutes.mainRoute,
                 (route) => true,
               );
             }
@@ -184,41 +184,42 @@ class _SignUpPageState extends State<SignUpPage> {
                             Gap(0.03.sh),
 
                             ///--- Sign Up Button
-                          if(state is !AuthLoadingState)   FadeInUpBig(
-                              child: AuthButtonWidget(
-                                  title: "Sign Up",
-                                  showGoogleIcon: false,
-                                  onTap: signUpButton),
-                            ),
+                            if (state is! AuthLoadingState)
+                              FadeInUpBig(
+                                child: AuthButtonWidget(
+                                    title: "Sign Up",
+                                    showGoogleIcon: false,
+                                    onTap: signUpButton),
+                              ),
 
-
-
-                           //------ Loading Indicators -----------///
+                            //------ Loading Indicators -----------///
                             if (state is AuthLoadingState)
                               SizedBox(
                                 child: CircularProgressIndicator(
                                   color: Colors.white,
                                 ),
                               ),
-                          
+
                             Gap(0.02.sh),
-                           if(state is !AuthLoadingState)  FadeOut(
-                              child: const Text(
-                                "OR",
-                                style: TextStyle(color: Colors.white),
+                            if (state is! AuthLoadingState)
+                              FadeOut(
+                                child: const Text(
+                                  "OR",
+                                  style: TextStyle(color: Colors.white),
+                                ),
                               ),
-                            ),
 
                             Gap(0.02.sh),
 
                             ///--- Sign Up with Google Button
-                           if(state is !AuthLoadingState)  FadeInUp(
-                              child: AuthButtonWidget(
-                                showGoogleIcon: true,
-                                title: "  Sign Up with Google",
-                                onTap: () {},
+                            if (state is! AuthLoadingState)
+                              FadeInUp(
+                                child: AuthButtonWidget(
+                                  showGoogleIcon: true,
+                                  title: "  Sign Up with Google",
+                                  onTap: signUpWithGoogle,
+                                ),
                               ),
-                            ),
 
                             Gap(0.03.sh),
 
@@ -268,5 +269,9 @@ class _SignUpPageState extends State<SignUpPage> {
         );
       }
     }
+  }
+
+  signUpWithGoogle() {
+    context.read<AuthBloc>().add(AuthWithGoogleEvent());
   }
 }

@@ -19,7 +19,7 @@ class AuthRepository {
         email: email, password: password);
   }
 
-  Future<User?> signInWithGoogle() async {
-    return await firebaseAuthProviders.signInWithGoogle();
+  Future<User?> authWithGoogle() async {
+    return await firebaseAuthProviders.authWithGoogle();
   }
 }

@@ -9,6 +9,7 @@ import 'package:trikecraft/base/themes/app_themes.dart';
 import 'package:trikecraft/data/repository/auth_repository.dart';
 import 'package:trikecraft/data/repository/firestore_repository.dart';
 import 'package:trikecraft/logic/auth/auth_bloc.dart';
+import 'package:trikecraft/logic/current_user/current_user_bloc.dart';
 import 'base/di/dependency_injection.dart';
 import 'base/services/hive/hive_services.dart';
 import 'base/services/notification/app_notification.dart';
@@ -49,7 +50,11 @@ class MyApp extends StatelessWidget {
           create: (context) => AuthBloc(
               authRepository: getIt<AuthRepository>(),
               firestoreRepository: getIt<FirestoreRepository>()),
-        )
+        ),
+        BlocProvider(
+          create: (context) => CurrentUserBloc(
+              firestoreRepository: getIt<FirestoreRepository>()),
+        ),
       ],
       child: ScreenUtilInit(
         splitScreenMode: true,

@@ -18,6 +18,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       : super(AuthInitialState()) {
     on<SignInWithEmailEvent>(_signInWithEmail);
     on<SignUpWithEmailEvent>(_signUpWithEmail);
+    on<AuthWithGoogleEvent>(_authWithGoogle);
   }
 
   //--------------------- Sign In With Email --------------------------///
@@ -87,7 +88,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           profilePicture: event.profilePicture,
           userId: userData.uid.toString(),
         );
-        await firestoreRepository.saveUser(user);
+        await firestoreRepository.addNewUser(user);
         emit(AuthSuccessState());
 
         // Set the user as logged in using Hive storage
@@ -98,6 +99,44 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (e) {
       // If there is an exception, emit failure state with the exception message
+      emit(AuthFailureState(errorMessage: e.toString()));
+    }
+  }
+
+  //---------------------  Authentication With Google --------------------------///
+  FutureOr<void> _authWithGoogle(
+      AuthWithGoogleEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoadingState());
+    try {
+      await authRepository.authWithGoogle().then(
+        (usero) async {
+          // If sign-in is successful, emit success state
+          if (usero != null) {
+            emit(AuthSuccessState());
+
+            final userData = UserModel(
+              fullName: usero.displayName ?? "User",
+              email: usero.email ?? "email",
+              profilePicture: usero.photoURL ?? "",
+              userId: usero.uid,
+            );
+
+            ///---- Add User Data to Firestore
+            await firestoreRepository.addNewUser(userData);
+
+            // Set the user as logged in using Hive storage
+            await MyHiveBoxes.settingBox.put(MyHiveKeys.userIsLoggedIn, true);
+          } else {
+            // If sign-in fails, emit failure state with an error message
+            emit(AuthFailureState(errorMessage: 'Sign in failed'));
+          }
+        },
+      ).catchError((e) {
+        // If sign-in fails, emit failure state with an error message
+        emit(AuthFailureState(errorMessage: e.toString()));
+      });
+    } catch (e) {
+      // If sign-in fails, emit failure state with an error message
       emit(AuthFailureState(errorMessage: e.toString()));
     }
   }

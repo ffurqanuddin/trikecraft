@@ -4,6 +4,7 @@ import 'package:trikecraft/data/providers/firestore_provider.dart';
 import 'package:trikecraft/data/repository/auth_repository.dart';
 import 'package:trikecraft/data/repository/firestore_repository.dart';
 import 'package:trikecraft/logic/auth/auth_bloc.dart';
+import 'package:trikecraft/logic/current_user/current_user_bloc.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -32,6 +33,13 @@ void getItSetup() {
   getIt.registerLazySingleton<AuthBloc>(
     () => AuthBloc(
         authRepository: getIt<AuthRepository>(),
+        firestoreRepository: getIt<FirestoreRepository>()),
+  );
+
+
+   //Register Current User bloc
+  getIt.registerLazySingleton<CurrentUserBloc>(
+    () => CurrentUserBloc(
         firestoreRepository: getIt<FirestoreRepository>()),
   );
 }

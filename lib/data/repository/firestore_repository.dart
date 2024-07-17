@@ -3,13 +3,11 @@ import 'package:trikecraft/models/user_model.dart';
 
 class FirestoreRepository {
   final FirestoreProvider firestoreProvider;
-  
 
   FirestoreRepository({required this.firestoreProvider});
-      
 
   // Save user data to Firestore
-  Future<void> saveUser(UserModel user) async {
+  Future<void> addNewUser(UserModel user) async {
     try {
       await firestoreProvider.saveUserData(user: user);
     } catch (e) {
@@ -38,5 +36,16 @@ class FirestoreRepository {
       // Handle the error accordingly
       return [];
     }
+  }
+
+  // Retrieve user data from Firestore by document ID
+  Future<UserModel?> getCurrentUserData() async {
+    try {
+      return await firestoreProvider.getCurrentUserData();
+    } catch (e) {
+      print("Error in FirestoreRepository retrieving Current User Data: $e");
+      // Handle the error accordingly
+    }
+    return null;
   }
 }

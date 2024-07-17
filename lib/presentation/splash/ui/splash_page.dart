@@ -77,7 +77,7 @@ class _SplashPageState extends State<SplashPage> {
     if(await MyHiveBoxes.settingBox.get(MyHiveKeys.userIsLoggedIn) == true){
          Navigator.pushNamedAndRemoveUntil(
       context,
-      AppRoutes.homeRoute,
+      AppRoutes.mainRoute,
       (route) => true,
     );
     } else{

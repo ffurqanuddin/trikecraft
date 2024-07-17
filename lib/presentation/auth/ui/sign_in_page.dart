@@ -1,4 +1,3 @@
-import 'dart:math';
 
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
@@ -29,7 +28,7 @@ class SignInPage extends StatefulWidget {
 class _SignUpPageState extends State<SignInPage> {
   final _formKey = GlobalKey<FormState>();
   late TextEditingController _emailController;
-  late TextEditingController  _passwordController;
+  late TextEditingController _passwordController;
   late bool obscure;
 
   @override
@@ -49,7 +48,7 @@ class _SignUpPageState extends State<SignInPage> {
             if (state is AuthSuccessState) {
               Navigator.pushNamedAndRemoveUntil(
                 context,
-                AppRoutes.homeRoute,
+                AppRoutes.mainRoute,
                 (route) => true,
               );
             }
@@ -59,7 +58,10 @@ class _SignUpPageState extends State<SignInPage> {
                 Overlay.of(context),
                 CustomSnackBar.error(
                   maxLines: 5,
-                  textStyle: TextStyle(fontSize: 16.sp, color: Colors.white, fontWeight: FontWeight.w500),
+                  textStyle: TextStyle(
+                      fontSize: 16.sp,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500),
                   message: state.errorMessage,
                 ),
               );
@@ -174,7 +176,7 @@ class _SignUpPageState extends State<SignInPage> {
                                 child: AuthButtonWidget(
                                   showGoogleIcon: true,
                                   title: "  Sign In with Google",
-                                  onTap: () {},
+                                  onTap: signInWithGoogle,
                                 ),
                               ),
 
@@ -220,23 +222,25 @@ class _SignUpPageState extends State<SignInPage> {
   void signInButton() {
     final email = _emailController.text.toString().trim();
     final password = _passwordController.text.toString().trim();
-    print("\nEmail is : "+email);
-    print("\nPassword is : "+password);
+    print("\nEmail is : " + email);
+    print("\nPassword is : " + password);
     if (_formKey.currentState!.validate()) {
       if (email.isValidEmail()) {
         context
             .read<AuthBloc>()
             .add(SignInWithEmailEvent(email: email, password: password));
-            
       } else {
         showTopSnackBar(
           Overlay.of(context),
-
           CustomSnackBar.error(
             message: "Email is not valid",
           ),
         );
       }
     }
+  }
+
+  signInWithGoogle() {
+    context.read<AuthBloc>().add(AuthWithGoogleEvent());
   }
 }
