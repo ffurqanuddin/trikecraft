@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -52,19 +53,23 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
         child: Column(
           children: [
             //---------Self Start ---------------//
-            _customSwitchTile(context,
-                label: "Self Start",
-                value: _selfStart,
-                onChanged: (val) => setState(() => _selfStart = val)),
+            FadeInLeft(
+              child: _customSwitchTile(context,
+                  label: "Self Start",
+                  value: _selfStart,
+                  onChanged: (val) => setState(() => _selfStart = val)),
+            ),
 
             //---------Roof ---------------//
-            _customSwitchTile(context,
-                label: "Roof",
-                value: _roof,
-                onChanged: (val) => setState(() => _roof = val)),
+            FadeInLeft(
+              child: _customSwitchTile(context,
+                  label: "Roof",
+                  value: _roof,
+                  onChanged: (val) => setState(() => _roof = val)),
+            ),
 
             //---------Color Selection Dropdown ---------------//
-            _colorSelectionDropDown(),
+            FadeInLeft(child: _colorSelectionDropDown()),
 
             //---------Seats Selection ---------------//
             _buildExpansionTile(
@@ -118,22 +123,26 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
               title: "Tyre Type",
               options: ["Regular", "Large"],
               selectedOption: _tyreType,
-              onSelect: (value) => setState(() => _tyreType= value),
+              onSelect: (value) => setState(() => _tyreType = value),
             ),
 
             ///--------Bottom Gap-------//
             Gap(0.05.sh),
-            SwipeButton.expand(
-              thumb: Icon(Icons.double_arrow_rounded, color: Colors.white),
-              child: Text("Swipe to Order Now"),
-              activeThumbColor: Theme.of(context).primaryColor,
-              activeTrackColor: Colors.grey.shade300,
-              onSwipe: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                      content: Text("Swiped"), backgroundColor: Colors.green),
-                );
-              },
+
+            ///---------- Swipe Button -----------///
+            Swing(
+              child: SwipeButton.expand(
+                thumb: Icon(Icons.double_arrow_rounded, color: Colors.white),
+                child: Text("Swipe to Order Now"),
+                activeThumbColor: Theme.of(context).primaryColor,
+                activeTrackColor: Colors.grey.shade300,
+                onSwipe: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                        content: Text("Swiped"), backgroundColor: Colors.green),
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -166,16 +175,19 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
                   ),
                 ),
                 Gap(15.sp),
-                // Title
+
+                // Customize your bike
                 BlocBuilder<ThemeCubit, ThemeState>(
                   builder: (context, state) {
-                    return Text(
-                      "Customize Your Own Bike",
-                      style: TextStyle(
-                          fontSize: 19.sp,
-                          fontFamily: AppFonts.poppins,
-                          color:
-                              state.isDarkMode ? Colors.white : Colors.black),
+                    return FadeInDown(
+                      child: Text(
+                        "Customize Your Own Bike",
+                        style: TextStyle(
+                            fontSize: 19.sp,
+                            fontFamily: AppFonts.poppins,
+                            color:
+                                state.isDarkMode ? Colors.white : Colors.black),
+                      ),
                     );
                   },
                 ),
@@ -231,29 +243,31 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
     required String selectedOption,
     required ValueChanged<String> onSelect,
   }) {
-    return ExpansionTile(
-      initiallyExpanded: false,
-      title: Text(title),
-      children: [
-        Wrap(
-          spacing: 8.sp,
-          children: options.map((option) {
-            return FilterChip(
-              label: Text(option),
-              selected: option == selectedOption,
-              onSelected: (val) => onSelect(option),
-              selectedColor: Theme.of(context).primaryColor,
-              backgroundColor: Colors.grey.shade200,
-              shape:
-                  StadiumBorder(side: BorderSide(color: Colors.grey.shade400)),
-              labelStyle: TextStyle(
-                color: option == selectedOption ? Colors.white : Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            );
-          }).toList(),
-        ),
-      ],
+    return FadeInUp(
+      child: ExpansionTile(
+        initiallyExpanded: false,
+        title: Text(title),
+        children: [
+          Wrap(
+            spacing: 8.sp,
+            children: options.map((option) {
+              return FilterChip(
+                label: Text(option),
+                selected: option == selectedOption,
+                onSelected: (val) => onSelect(option),
+                selectedColor: Theme.of(context).primaryColor,
+                backgroundColor: Colors.grey.shade200,
+                shape: StadiumBorder(
+                    side: BorderSide(color: Colors.grey.shade400)),
+                labelStyle: TextStyle(
+                  color: option == selectedOption ? Colors.white : Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
     );
   }
 }
