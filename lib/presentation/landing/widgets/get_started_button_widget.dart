@@ -23,7 +23,7 @@ class GetStartedButtonWidget extends StatelessWidget {
                 horizontal: 30.sp, vertical: 12.sp),
             margin:  EdgeInsets.only(bottom: 25.sp),
             decoration: BoxDecoration(
-                color: Colors.orange,
+              color: Theme.of(context).primaryColor,
                 borderRadius: BorderRadius.circular(30)),
             child: Text(
               "Get Started",

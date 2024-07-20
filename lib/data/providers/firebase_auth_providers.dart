@@ -40,4 +40,11 @@ class FirebaseAuthProviders {
       throw Exception('Failed to sign in with Google: $e');
     }
   }
+
+
+  // LOGOUT 
+  Future logout(
+    ) async {
+   await _auth.signOut();
+  }
 }

@@ -41,15 +41,9 @@ class _MainPageState extends State<MainPage> {
             BottomNavigationBarItem(
                 icon: Icon(CupertinoIcons.settings), label: "Settings"),
           ]),
-
-          body: _pages[currentIndex],
+      body: _pages[currentIndex],
     );
   }
 
-
-  List<Widget> _pages = [
-    HomePage(),
-    MyOrdersPage(),
-    SettingsPage()
-  ];
+  List<Widget> _pages = [HomePage(), MyOrdersPage(), SettingsPage()];
 }

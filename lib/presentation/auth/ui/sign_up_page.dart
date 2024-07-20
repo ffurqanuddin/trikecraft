@@ -68,6 +68,10 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
               );
             }
+
+            if(state is AuthSuccessLogOutState){
+              _loadingDialog(context);
+            }
           },
           builder: (context, state) {
             return Stack(
@@ -184,7 +188,6 @@ class _SignUpPageState extends State<SignUpPage> {
                             Gap(0.03.sh),
 
                             ///--- Sign Up Button
-                            if (state is! AuthLoadingState)
                               FadeInUpBig(
                                 child: AuthButtonWidget(
                                     title: "Sign Up",
@@ -192,14 +195,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                     onTap: signUpButton),
                               ),
 
-                            //------ Loading Indicators -----------///
-                            if (state is AuthLoadingState)
-                              SizedBox(
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                ),
-                              ),
-
+                       
                             Gap(0.02.sh),
                             if (state is! AuthLoadingState)
                               FadeOut(
@@ -212,7 +208,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             Gap(0.02.sh),
 
                             ///--- Sign Up with Google Button
-                            if (state is! AuthLoadingState)
+                            
                               FadeInUp(
                                 child: AuthButtonWidget(
                                   showGoogleIcon: true,
@@ -273,5 +269,19 @@ class _SignUpPageState extends State<SignUpPage> {
 
   signUpWithGoogle() {
     context.read<AuthBloc>().add(AuthWithGoogleEvent());
+  }
+
+  void _loadingDialog(BuildContext context) {
+        showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Dialog(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+              alignment: Alignment.center,
+              child: Center(
+                child: Center(child: CircularProgressIndicator(color: Colors.white,)),
+              ),
+            ));
   }
 }

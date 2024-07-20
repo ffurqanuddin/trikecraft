@@ -2,6 +2,9 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:one_context/one_context.dart';
+import 'package:trikecraft/base/routes/app_routes.dart';
 import 'package:trikecraft/base/services/hive/hive_services.dart';
 import 'package:trikecraft/data/repository/auth_repository.dart';
 import 'package:trikecraft/data/repository/firestore_repository.dart';
@@ -19,6 +22,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<SignInWithEmailEvent>(_signInWithEmail);
     on<SignUpWithEmailEvent>(_signUpWithEmail);
     on<AuthWithGoogleEvent>(_authWithGoogle);
+    on<LogOutEvent>(_logOutEvent);
   }
 
   //--------------------- Sign In With Email --------------------------///
@@ -37,9 +41,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
         // Set the user as logged in using Hive storage
         await MyHiveBoxes.settingBox.put(MyHiveKeys.userIsLoggedIn, true);
+
+        emit(AuthInitialState());
       } else {
         // If sign-in fails, emit failure state with an error message
         emit(AuthFailureState(errorMessage: 'Sign in failed'));
+          OneContext().pop();
       }
     } on FirebaseAuthException catch (e) {
       // Handle specific Firebase authentication exceptions
@@ -67,6 +74,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (e) {
       // If there is an exception, emit failure state with the exception message
       emit(AuthFailureState(errorMessage: e.toString()));
+        OneContext().pop();
     }
   }
 
@@ -93,6 +101,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
         // Set the user as logged in using Hive storage
         await MyHiveBoxes.settingBox.put(MyHiveKeys.userIsLoggedIn, true);
+
+        emit(AuthInitialState());
       } else {
         // If sign-up fails, emit failure state with an error message
         emit(AuthFailureState(errorMessage: 'Sign up failed'));
@@ -100,6 +110,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (e) {
       // If there is an exception, emit failure state with the exception message
       emit(AuthFailureState(errorMessage: e.toString()));
+        OneContext().pop();
     }
   }
 
@@ -126,6 +137,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
             // Set the user as logged in using Hive storage
             await MyHiveBoxes.settingBox.put(MyHiveKeys.userIsLoggedIn, true);
+
+            emit(AuthInitialState());
           } else {
             // If sign-in fails, emit failure state with an error message
             emit(AuthFailureState(errorMessage: 'Sign in failed'));
@@ -138,6 +151,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (e) {
       // If sign-in fails, emit failure state with an error message
       emit(AuthFailureState(errorMessage: e.toString()));
+      OneContext().pop();
+    }
+  }
+
+  FutureOr<void> _logOutEvent(
+      LogOutEvent event, Emitter<AuthState> emit) async {
+    emit(AuthLoadingState());
+    try {
+      authRepository.logout().whenComplete(
+        () async {
+          // Set the user as logged Out using Hive storage
+          await MyHiveBoxes.settingBox.put(MyHiveKeys.userIsLoggedIn, false);
+          Navigator.pushNamedAndRemoveUntil(
+            event.context,
+            AppRoutes.signInRoute,
+            (route) => true,
+          );
+          emit(AuthSuccessLogOutState());
+          emit(AuthInitialState());
+        },
+      );
+    } catch (e) {
+      emit(AuthFailureState(errorMessage: e.toString()));
+    
     }
   }
 }

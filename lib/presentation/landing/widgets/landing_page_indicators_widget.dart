@@ -22,8 +22,8 @@ class LandingPageIndicatorsWidget extends StatelessWidget {
           controller: _pageController,
           count: landingPageContentList.length,
           axisDirection: Axis.horizontal,
-          effect: const ExpandingDotsEffect(
-            activeDotColor: Colors.orange,
+          effect:  ExpandingDotsEffect(
+            activeDotColor: Theme.of(context).primaryColor
           ),
         ),
       ),

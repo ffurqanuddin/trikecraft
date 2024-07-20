@@ -22,4 +22,8 @@ class AuthRepository {
   Future<User?> authWithGoogle() async {
     return await firebaseAuthProviders.authWithGoogle();
   }
+
+  Future logout() async {
+    await firebaseAuthProviders.logout();
+  }
 }

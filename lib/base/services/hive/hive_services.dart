@@ -22,9 +22,8 @@ class MyHiveBoxes {
 class MyHiveKeys {
   static const String userIsLoggedIn = "user_is_logged_in";
   static const String isAdminLoggedIn = "user_is_admin";
-
+  static const String themeListIndex = "theme_index";
+  
   static const String darkModeHiveKey = "hive_dark_mode";
-  static const String blackModeHiveKey = "hive_black_mode";
-  static const String themeAccentColorHiveKey = "hive_theme_accent_color";
   static const String showOnBoardingScreenHiveKey = "hive_show_on_boarding";
 }

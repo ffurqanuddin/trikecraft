@@ -7,9 +7,13 @@ import 'package:trikecraft/base/routes/app_router.dart';
 import 'package:trikecraft/base/routes/app_routes.dart';
 import 'package:trikecraft/base/themes/app_themes.dart';
 import 'package:trikecraft/data/repository/auth_repository.dart';
+import 'package:trikecraft/data/repository/bikes_data_repository.dart';
 import 'package:trikecraft/data/repository/firestore_repository.dart';
 import 'package:trikecraft/logic/auth/auth_bloc.dart';
 import 'package:trikecraft/logic/current_user/current_user_bloc.dart';
+import 'package:trikecraft/logic/greeting_text/greeting_cubit.dart';
+import 'package:trikecraft/logic/available_bikes/available_bikes_bloc.dart';
+import 'package:trikecraft/logic/theme/theme_cubit.dart';
 import 'base/di/dependency_injection.dart';
 import 'base/services/hive/hive_services.dart';
 import 'base/services/notification/app_notification.dart';
@@ -55,15 +59,31 @@ class MyApp extends StatelessWidget {
           create: (context) => CurrentUserBloc(
               firestoreRepository: getIt<FirestoreRepository>()),
         ),
+        BlocProvider(
+          create: (context) => ThemeCubit(),
+        ),
+        BlocProvider(
+          create: (context) => GreetingCubit(),
+        ),
+        BlocProvider(
+          create: (context) => AvailableBikesBloc(
+              bikesDataRepository: getIt<BikesDataRepository>()),
+        ),
       ],
       child: ScreenUtilInit(
         splitScreenMode: true,
-        builder: (context, child) => MaterialApp(
-          debugShowCheckedModeBanner: false,
-          title: "TrikeCraft",
-          theme: AppThemes.lightTheme,
-          onGenerateRoute: AppRouter.generateRoute,
-          initialRoute: AppRoutes.splashRoute,
+        builder: (context, child) => BlocBuilder<ThemeCubit, ThemeState>(
+          builder: (context, state) {
+            return MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: "TrikeCraft",
+              theme: state.isDarkMode
+                  ? AppThemes.DarkThemeList[state.themeIndex]
+                  : AppThemes.LightThemeList[state.themeIndex],
+              onGenerateRoute: AppRouter.generateRoute,
+              initialRoute: AppRoutes.splashRoute,
+            );
+          },
         ),
       ),
     );

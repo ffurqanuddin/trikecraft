@@ -1,4 +1,3 @@
-
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -65,6 +64,10 @@ class _SignUpPageState extends State<SignInPage> {
                   message: state.errorMessage,
                 ),
               );
+            }
+
+            if (state is AuthLoadingState) {
+              _loadingDialog(context);
             }
           },
           builder: (context, state) {
@@ -151,42 +154,42 @@ class _SignUpPageState extends State<SignInPage> {
                             Gap(0.03.sh),
 
                             ///--- Sign In Button
-                            if (state is! AuthLoadingState)
-                              FadeInUpBig(
-                                child: AuthButtonWidget(
-                                    title: "Sign In",
-                                    showGoogleIcon: false,
-                                    onTap: signInButton),
-                              ),
+                            // if (state is! AuthLoadingState )
+                            FadeInUpBig(
+                              child: AuthButtonWidget(
+                                  title: "Sign In",
+                                  showGoogleIcon: false,
+                                  onTap: signInButton),
+                            ),
 
                             Gap(0.02.sh),
-                            if (state is! AuthLoadingState)
-                              FadeIn(
-                                child: const Text(
-                                  "OR",
-                                  style: TextStyle(color: Colors.white),
-                                ),
+                            // if (state is! AuthLoadingState )
+                            FadeIn(
+                              child: const Text(
+                                "OR",
+                                style: TextStyle(color: Colors.white),
                               ),
+                            ),
 
                             Gap(0.02.sh),
 
                             ///--- Sign In Button
-                            if (state is! AuthLoadingState)
-                              FadeInUp(
-                                child: AuthButtonWidget(
-                                  showGoogleIcon: true,
-                                  title: "  Sign In with Google",
-                                  onTap: signInWithGoogle,
-                                ),
+                            // if (state is! AuthLoadingState)
+                            FadeInUp(
+                              child: AuthButtonWidget(
+                                showGoogleIcon: true,
+                                title: "  Sign In with Google",
+                                onTap: signInWithGoogle,
                               ),
+                            ),
 
                             //------ Loading Indicators -----------///
-                            if (state is AuthLoadingState)
-                              SizedBox(
-                                child: CircularProgressIndicator(
-                                  color: Colors.white,
-                                ),
-                              ),
+                            // if (state is AuthLoadingState )
+                            //   SizedBox(
+                            //     child: CircularProgressIndicator(
+                            //       color: Colors.white,
+                            //     ),
+                            //   ),
 
                             Gap(0.03.sh),
 
@@ -243,4 +246,20 @@ class _SignUpPageState extends State<SignInPage> {
   signInWithGoogle() {
     context.read<AuthBloc>().add(AuthWithGoogleEvent());
   }
+
+
+  void _loadingDialog(BuildContext context) {
+        showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => Dialog(
+          backgroundColor: Colors.transparent,
+          shadowColor: Colors.transparent,
+              alignment: Alignment.center,
+              child: Center(
+                child: Center(child: CircularProgressIndicator(color: Colors.white,)),
+              ),
+            ));
+  }
+
 }
