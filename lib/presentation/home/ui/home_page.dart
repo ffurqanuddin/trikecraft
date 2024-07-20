@@ -1,3 +1,4 @@
+import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -35,19 +36,21 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //---- Recommandation
+            //---- Available Bikes
             AvailableWidget(),
 
             //----------- Customize your own bike
-            Center(
-                child: CustomElevatedIconButtonWidget(
-                    label: "Craft Your Custom Bike",
-                    icon: FontAwesomeIcons.screwdriverWrench,
-                    onPressed: () {
-                      print("Craft Button On Pressed");
-                      Navigator.pushNamed(
-                          context, AppRoutes.craftYourCustomBikeRoute);
-                    }))
+            BounceInUp(
+              child: Center(
+                  child: CustomElevatedIconButtonWidget(
+                      label: "Craft Your Custom Bike",
+                      icon: FontAwesomeIcons.screwdriverWrench,
+                      onPressed: () {
+                        print("Craft Button On Pressed");
+                        Navigator.pushNamed(
+                            context, AppRoutes.craftYourCustomBikeRoute);
+                      })),
+            )
           ],
         ),
       ),

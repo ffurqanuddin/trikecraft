@@ -1,7 +1,8 @@
 
 
 
-  import 'package:flutter/material.dart';
+  import 'package:animate_do/animate_do.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
@@ -22,16 +23,16 @@ AppBar HomeAppBar() {
             child: Row(
               children: [
                 ///---- Avatar
-                ProfileAvatarWidget(),
+                SpinPerfect(child: ProfileAvatarWidget()),
                 Gap(10.sp),
 
                 ///----- Greeting Text
-                GreetingTextWidget(),
+                FadeInDown(child: GreetingTextWidget()),
 
                 Spacer(),
 
                 ///--- Dark/Light Mode Button
-                ThemeModeChangeButtonWidget(),
+                FadeInRight(child: ThemeModeChangeButtonWidget()),
               ],
             ),
           ),
@@ -44,22 +45,24 @@ AppBar HomeAppBar() {
         child: Row(
           children: [
             Expanded(
-              child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 5.sp),
-                  margin: EdgeInsets.symmetric(
-                      horizontal: 10.sp, vertical: 15.sp),
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(color: Colors.white70),
-                  ),
-                  child: Text(
-                    "Search Bikes",
-                    style: TextStyle(
-                        fontSize: 15.sp,
-                        fontFamily: AppFonts.poppins,
-                        color: Colors.white70),
-                  )),
+              child: Pulse(
+                child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 5.sp),
+                    margin: EdgeInsets.symmetric(
+                        horizontal: 10.sp, vertical: 15.sp),
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(color: Colors.white70),
+                    ),
+                    child: Text(
+                      "Search Bikes",
+                      style: TextStyle(
+                          fontSize: 15.sp,
+                          fontFamily: AppFonts.poppins,
+                          color: Colors.white70),
+                    )),
+              ),
             ),
             IconButton(
                 onPressed: () {},
