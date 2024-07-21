@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:trikecraft/base/routes/app_routes.dart';
 
 class ProfileAvatarWidget extends StatelessWidget {
   const ProfileAvatarWidget({
@@ -10,13 +11,18 @@ class ProfileAvatarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: CircleAvatar(
-        maxRadius: 23.sp,
-        minRadius: 20.sp,
-        onBackgroundImageError: (exception, stackTrace) => Icon(Icons.person),
-        backgroundImage: CachedNetworkImageProvider(FirebaseAuth.instance.currentUser!.photoURL??_userImage)
+    return GestureDetector(
+      onTap: (){
+        Navigator.pushNamed(context, AppRoutes.userProfileRoute);
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: CircleAvatar(
+          maxRadius: 23.sp,
+          minRadius: 20.sp,
+          onBackgroundImageError: (exception, stackTrace) => Icon(Icons.person),
+          backgroundImage: CachedNetworkImageProvider(FirebaseAuth.instance.currentUser!.photoURL??_userImage)
+        ),
       ),
     );
   }

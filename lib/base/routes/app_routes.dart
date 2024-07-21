@@ -11,5 +11,7 @@ class AppRoutes {
   static const String craftYourCustomBikeRoute = '/craft_your_custom_bike';
 
   static const String settingRoute = '/setting';
+  static const String userProfileRoute = '/profile';
+
   static const String forgotPasswordRoute = '/forgot_password';
 }

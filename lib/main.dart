@@ -8,9 +8,11 @@ import 'package:trikecraft/base/routes/app_routes.dart';
 import 'package:trikecraft/base/themes/app_themes.dart';
 import 'package:trikecraft/data/repository/auth_repository.dart';
 import 'package:trikecraft/data/repository/bikes_data_repository.dart';
-import 'package:trikecraft/data/repository/firestore_repository.dart';
+import 'package:trikecraft/data/repository/firestore_order_data_repository.dart';
+import 'package:trikecraft/data/repository/firestore_user_data_repository.dart';
 import 'package:trikecraft/logic/auth/auth_bloc.dart';
 import 'package:trikecraft/logic/current_user/current_user_bloc.dart';
+import 'package:trikecraft/logic/customized_bike_order/customized_bike_order_bloc.dart';
 import 'package:trikecraft/logic/greeting_text/greeting_cubit.dart';
 import 'package:trikecraft/logic/available_bikes/available_bikes_bloc.dart';
 import 'package:trikecraft/logic/theme/theme_cubit.dart';
@@ -53,11 +55,11 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => AuthBloc(
               authRepository: getIt<AuthRepository>(),
-              firestoreRepository: getIt<FirestoreRepository>()),
+              firestoreRepository: getIt<FirestoreUserDataRepository>()),
         ),
         BlocProvider(
           create: (context) => CurrentUserBloc(
-              firestoreRepository: getIt<FirestoreRepository>()),
+              firestoreRepository: getIt<FirestoreUserDataRepository>()),
         ),
         BlocProvider(
           create: (context) => ThemeCubit(),
@@ -68,6 +70,11 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => AvailableBikesBloc(
               bikesDataRepository: getIt<BikesDataRepository>()),
+        ),
+        BlocProvider(
+          create: (context) => CustomizedBikeOrderBloc(
+              firestoreOrdersDataRepository:
+                  getIt<FirestoreOrdersDataRepository>()),
         ),
       ],
       child: ScreenUtilInit(

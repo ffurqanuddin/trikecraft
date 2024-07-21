@@ -24,6 +24,7 @@ AppBar HomeAppBar() {
               children: [
                 ///---- Avatar
                 SpinPerfect(child: ProfileAvatarWidget()),
+
                 Gap(10.sp),
 
                 ///----- Greeting Text

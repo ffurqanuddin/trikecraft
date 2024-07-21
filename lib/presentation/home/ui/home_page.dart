@@ -39,11 +39,11 @@ class _HomePageState extends State<HomePage> {
             //---- Available Bikes
             AvailableWidget(),
 
-            //----------- Customize your own bike
+            //----------- Customize your Old bike
             BounceInUp(
               child: Center(
                   child: CustomElevatedIconButtonWidget(
-                      label: "Craft Your Custom Bike",
+                      label: "Craft Your Old Bike",
                       icon: FontAwesomeIcons.screwdriverWrench,
                       onPressed: () {
                         print("Craft Button On Pressed");

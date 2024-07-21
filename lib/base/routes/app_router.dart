@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:trikecraft/base/routes/app_routes.dart';
 import 'package:trikecraft/presentation/auth/ui/forgot_password_page.dart';
-import 'package:trikecraft/presentation/craft_your_custom_bike/ui/craft_your_custom_bike_page.dart';
+import 'package:trikecraft/presentation/craft_your_old_bike/ui/craft_your_old_bike_page.dart';
 import 'package:trikecraft/presentation/my_orders/ui/my_orders_page.dart';
 import 'package:trikecraft/presentation/setting/ui/settings_page.dart';
 import 'package:trikecraft/presentation/splash/ui/splash_page.dart';
+import 'package:trikecraft/presentation/user_profile/ui/profile_page.dart';
 
 import '../../presentation/auth/ui/sign_in_page.dart';
 import '../../presentation/auth/ui/sign_up_page.dart';
@@ -44,6 +45,9 @@ class AppRouter {
       case AppRoutes.craftYourCustomBikeRoute:
         return MaterialPageRoute(
             builder: (_) => const CraftYourCustomBikePage());
+
+      case AppRoutes.userProfileRoute:
+        return MaterialPageRoute(builder: (_) => const ProfilePage());
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

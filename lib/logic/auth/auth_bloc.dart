@@ -7,7 +7,7 @@ import 'package:one_context/one_context.dart';
 import 'package:trikecraft/base/routes/app_routes.dart';
 import 'package:trikecraft/base/services/hive/hive_services.dart';
 import 'package:trikecraft/data/repository/auth_repository.dart';
-import 'package:trikecraft/data/repository/firestore_repository.dart';
+import 'package:trikecraft/data/repository/firestore_user_data_repository.dart';
 import 'package:trikecraft/models/user_model.dart';
 
 part 'auth_event.dart';
@@ -15,7 +15,7 @@ part 'auth_state.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;
-  final FirestoreRepository firestoreRepository;
+  final FirestoreUserDataRepository firestoreRepository;
 
   AuthBloc({required this.authRepository, required this.firestoreRepository})
       : super(AuthInitialState()) {
@@ -46,7 +46,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       } else {
         // If sign-in fails, emit failure state with an error message
         emit(AuthFailureState(errorMessage: 'Sign in failed'));
-          OneContext().pop();
+        OneContext().pop();
       }
     } on FirebaseAuthException catch (e) {
       // Handle specific Firebase authentication exceptions
@@ -74,7 +74,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (e) {
       // If there is an exception, emit failure state with the exception message
       emit(AuthFailureState(errorMessage: e.toString()));
-        OneContext().pop();
+      OneContext().pop();
     }
   }
 
@@ -110,7 +110,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     } catch (e) {
       // If there is an exception, emit failure state with the exception message
       emit(AuthFailureState(errorMessage: e.toString()));
-        OneContext().pop();
+      OneContext().pop();
     }
   }
 
@@ -174,7 +174,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       );
     } catch (e) {
       emit(AuthFailureState(errorMessage: e.toString()));
-    
     }
   }
 }
