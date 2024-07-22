@@ -36,6 +36,7 @@ class FirestoreOrdersProvider {
           .collection(customizedBikeOrder)
           .where("userEmail", isEqualTo: userEmail)
           .get();
+
     } catch (e) {
       print("Error retrieving customized bikes order data: $e");
       // Handle the error accordingly
@@ -43,7 +44,7 @@ class FirestoreOrdersProvider {
     }
   }
 
-  // Get Bike order data from Firestore
+  // Cancel Bike order data from Firestore
   Future<void> cancelCustomizedBikeOrderData({required String orderId}) async {
     try {
       await _firestore.collection(customizedBikeOrder).doc(orderId).delete();

@@ -23,20 +23,6 @@ class WhatsAppNowFloatingActionButtonWidget extends StatelessWidget {
         ),
       ),
     );
-    // return ElevatedButton.icon(
-    //   onPressed: () async {
-    //     if (await canLaunchUrl(Uri.parse(url))) {
-    //       await launchUrl(Uri.parse(url));
-    //     } else {
-    //       throw 'Could not launch $url';
-    //     }
-    //   },
-    //   style: ElevatedButton.styleFrom(
-    //     fixedSize: Size(0.5.sw, 0.05.sh),
-    //     shape: StadiumBorder(),
-    //   ),
-    //   label: Text("WhatsApp Now"),
-    //   icon: Icon(Icons.chat),
-    // );
+
   }
 }

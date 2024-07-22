@@ -36,6 +36,7 @@ class CustomizedBikeOrderBloc
   Future<FutureOr<void>> _loadCustomizedBikeOrderDataEvent(
       LoadCustomizedBikeOrderDataEvent event,
       Emitter<CustomizedBikeOrderState> emit) async {
+
     emit(CustomizedBikeOrderDataLoadingState());
     try {
       final orders =

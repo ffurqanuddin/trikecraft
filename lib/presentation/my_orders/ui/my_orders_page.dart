@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:trikecraft/base/assets/app_fonts.dart';
 import 'package:trikecraft/logic/customized_bike_order/customized_bike_order_bloc.dart';
 import 'package:trikecraft/presentation/my_orders/widgets/customized_bikes_order_tab.dart';

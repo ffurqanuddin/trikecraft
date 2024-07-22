@@ -177,7 +177,7 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
                   ///-------- Your Contact Number -------///
                   CustomTextFieldWidget(
                     controller: _contactTextEditingController,
-                    hintText: "Your Contact Number",
+                    hintText: "Your Contact eg. social media username,whatsapp, email etc.",
                     maxLength: 15,
                   ),
                 ],
