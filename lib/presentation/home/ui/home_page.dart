@@ -23,7 +23,7 @@ class _HomePageState extends State<HomePage> {
     // TODO: implement initState
     super.initState();
     context.read<GreetingCubit>().updateGreeting();
-    context.read<AvailableBikesBloc>().add(AvailableBikesGetListEvent());
+    context.read<AvailableBikesBloc>().add(FetchAvailableBikesListEvent());
   }
 
   @override

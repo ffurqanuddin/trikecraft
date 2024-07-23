@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:trikecraft/data/providers/bikes_data_provider.dart';
 import 'package:trikecraft/data/providers/firebase_auth_providers.dart';
 import 'package:trikecraft/data/providers/firestore_orders_provider.dart';
 import 'package:trikecraft/data/providers/firestore_user_data_provider.dart';
@@ -46,12 +47,18 @@ void getItSetup() {
         firestoreRepository: getIt<FirestoreUserDataRepository>()),
   );
 
-  getIt.registerLazySingleton<BikesDataRepository>(() => BikesDataRepository());
+    getIt.registerLazySingleton<BikesDataProvider>(
+    () => BikesDataProvider(),
+  );
+
+  getIt.registerLazySingleton<BikesDataRepository>(() => BikesDataRepository(bikesDataProvider: getIt<BikesDataProvider>()));
   getIt.registerLazySingleton<FirestoreOrdersProvider>(
       () => FirestoreOrdersProvider());
 
   getIt.registerLazySingleton<FirestoreOrdersDataRepository>(() =>
       FirestoreOrdersDataRepository(
           firestoreOrdersProvider: getIt<FirestoreOrdersProvider>()));
+
+
 
 }

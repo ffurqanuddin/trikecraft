@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:animate_do/animate_do.dart';
 import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,9 +37,10 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
   late String _color;
   late String _brake;
   late String _gear;
+  late String _kick;
   late bool _roof;
   late String _transmission;
-  late String _tyreType;
+  late String _tyreSize;
   late TextEditingController _extraDetailTextEditingController;
   late TextEditingController _contactTextEditingController;
   late TextEditingController _addressTextEditingController;
@@ -56,11 +55,33 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
     _color = "Red";
     _brake = "Hand";
     _gear = "Feet";
+    _kick = "Feet";
     _transmission = "Shaft";
-    _tyreType = "Regular";
+    _tyreSize = "Regular";
     _extraDetailTextEditingController = TextEditingController();
     _addressTextEditingController = TextEditingController();
     _contactTextEditingController = TextEditingController();
+  }
+
+  int calculateTotalPrice() {
+    int serviceCharges = 500;
+    int tyreCharges = _tyreSize == 'regular'
+        ? 3000
+        : _tyreSize == 'large'
+            ? 5000
+            : 2000;
+    int seatCharges = _selectedSeat == 1
+        ? 0
+        : _selectedSeat == 2
+            ? 5000
+            : _selectedSeat == 3
+                ? 8000
+                : 12000;
+    int basicCustomizationCharges = 20000;
+
+    int totalPrice =
+        serviceCharges + tyreCharges + seatCharges + basicCustomizationCharges;
+    return totalPrice;
   }
 
   @override
@@ -140,6 +161,15 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
                 onSelect: (value) => setState(() => _gear = value),
               ),
 
+              //---------Kick ---------------//
+              _buildExpansionTile(
+                context: context,
+                title: "Kick",
+                options: ["Hand", "Feet"],
+                selectedOption: _kick,
+                onSelect: (value) => setState(() => _kick = value),
+              ),
+
               //-----------Transmission-----------///
               _buildExpansionTile(
                 context: context,
@@ -149,13 +179,13 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
                 onSelect: (value) => setState(() => _transmission = value),
               ),
 
-              //-----------Tyre Type-----------///
+              //-----------Tyre Size-----------///
               _buildExpansionTile(
                 context: context,
-                title: "Tyre Type",
-                options: ["Regular", "Large"],
-                selectedOption: _tyreType,
-                onSelect: (value) => setState(() => _tyreType = value),
+                title: "Tyre Size",
+                options: ["Small", "Regular", "Large"],
+                selectedOption: _tyreSize,
+                onSelect: (value) => setState(() => _tyreSize = value),
               ),
 
               ExpansionTile(
@@ -177,8 +207,9 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
                   ///-------- Your Contact Number -------///
                   CustomTextFieldWidget(
                     controller: _contactTextEditingController,
-                    hintText: "Your Contact eg. social media username,whatsapp, email etc.",
-                    maxLength: 15,
+                    hintText:
+                        "Your Contact eg. social media username,whatsapp, email etc.",
+                    maxLength: 35,
                   ),
                 ],
               ),
@@ -365,7 +396,7 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
                 child: Text(
                   "Your Customization",
                   style: TextStyle(
-                       fontWeight: FontWeight.w600,
+                      fontWeight: FontWeight.w600,
                       fontSize: 16.sp,
                       fontFamily: AppFonts.poppins),
                 ),
@@ -401,12 +432,16 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
               val: _gear,
             ),
             ItemRowWidget(
+              label: "Kick",
+              val: _kick,
+            ),
+            ItemRowWidget(
               label: "Transmission",
               val: _transmission,
             ),
             ItemRowWidget(
               label: "Tyre Type",
-              val: _tyreType,
+              val: _tyreSize,
             ),
 
             ///------ Bike Extra Detail --------------///
@@ -462,7 +497,7 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "App Services Charges :",
+                        "Services Charges :",
                         style: TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 16.sp),
                       ),
@@ -480,12 +515,58 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        "Customization Charges :",
+                        "Tyres Charges :",
                         style: TextStyle(
                             fontWeight: FontWeight.w400, fontSize: 16.sp),
                       ),
                       Text(
-                        "40, 000 PKR",
+                        (_tyreSize == 'regular'
+                            ? '3000 PKR'
+                            : _tyreSize == 'large'
+                                ? '5000 PKR'
+                                : '2000 PKR'),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.sp,
+                            fontFamily: AppFonts.poppins),
+                      ),
+                    ],
+                  ),
+                  Gap(10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Seats Charges :",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 16.sp),
+                      ),
+                      Text(
+                        (_selectedSeat == 1
+                            ? 'no charges'
+                            : _selectedSeat == 2
+                                ? '5000 PKR'
+                                : _selectedSeat == 3
+                                    ? '8000 PKR'
+                                    : '12000 PKR'),
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14.sp,
+                            fontFamily: AppFonts.poppins),
+                      ),
+                    ],
+                  ),
+                  Gap(10),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Basic Customization Charges :",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w400, fontSize: 16.sp),
+                      ),
+                      Text(
+                        "20, 000 PKR",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 14.sp,
@@ -503,13 +584,7 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
                             fontWeight: FontWeight.w500, fontSize: 20.sp),
                       ),
                       Text(
-                        _selectedSeat == 1
-                            ? "40, 500 PKR"
-                            : _selectedSeat == 2
-                                ? "50, 500 PKR"
-                                : _selectedSeat == 3
-                                    ? "60, 500 PKR"
-                                    : "70, 500 PKR",
+                        "${calculateTotalPrice()} PKR",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 16.sp,
@@ -545,17 +620,10 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
 
                           final _currentUser =
                               FirebaseAuth.instance.currentUser!;
-                          final int _totalPrice = _selectedSeat == 1
-                              ? 40500
-                              : _selectedSeat == 2
-                                  ? 50500
-                                  : _selectedSeat == 3
-                                      ? 60500
-                                      : 70500;
 
                           ///---------------- Save data to Firestore Customized Orders Collection ------------------///
                           context.read<CustomizedBikeOrderBloc>().add(
-                              SaveCustomizedBikeOrderDataEvent(
+                                SaveCustomizedBikeOrderDataEvent(
                                   customizationOrderModel:
                                       CustomizationOrderModel(
                                           orderId: generateOrderId(_currentUser
@@ -577,13 +645,17 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
                                           engineCc: _engineCC.toString(),
                                           brake: _brake,
                                           gear: _gear,
+                                          kick: _kick,
+                                          tyreSize: _tyreSize,
                                           transmission: _transmission,
-                                          totalPrice: _totalPrice,
+                                          totalPrice: calculateTotalPrice(),
                                           orderDate: DateTime.now(),
                                           orderStatus: "pending",
                                           extraDetail:
                                               _extraDetailTextEditingController
-                                                  .text)));
+                                                  .text),
+                                ),
+                              );
                         },
                       ),
                     ),

@@ -13,7 +13,9 @@ class CustomizationOrderModel {
   String engineCc;
   String brake; // "hand" or "feet"
   String gear; // "hand" or "feet"
+  String kick;
   String transmission; // "shaft" or "chain"
+  String tyreSize;
   int totalPrice;
   DateTime orderDate;
   String orderStatus;
@@ -32,7 +34,9 @@ class CustomizationOrderModel {
       required this.engineCc,
       required this.brake,
       required this.gear,
+      required this.kick,
       required this.transmission,
+      required this.tyreSize,
       required this.totalPrice,
       required this.orderDate,
       required this.orderStatus,
@@ -52,7 +56,9 @@ class CustomizationOrderModel {
         engineCc: doc['engineCc'] as String,
         brake: doc['brake'] as String,
         gear: doc['gear'] as String,
+        kick: doc['kick'] as String,
         transmission: doc['transmission'] as String,
+        tyreSize: doc['tyreSize'] as String,
         totalPrice: doc['totalPrice'] as int,
         orderDate: (doc['orderDate'] as Timestamp).toDate(),
         orderStatus: doc['orderStatus'] as String,
@@ -73,7 +79,9 @@ class CustomizationOrderModel {
       'engineCc': engineCc,
       'brake': brake,
       'gear': gear,
+      'kick': kick,
       'transmission': transmission,
+      'tyreSize': tyreSize,
       'totalPrice': totalPrice,
       'orderDate': orderDate,
       'orderStatus': orderStatus,

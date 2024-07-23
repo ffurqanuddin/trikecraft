@@ -12,11 +12,13 @@ final class AvailableBikesInitialState extends AvailableBikesState {}
 final class AvailableBikesLoadingState extends AvailableBikesState {}
 
 final class AvailableBikesSuccessState extends AvailableBikesState {
-  AvailableBikesSuccessState(
-      {required this.bikesList, required this.pageIndex});
-  final List<AvailableBikeModel> bikesList;
-  final int pageIndex;
+  AvailableBikesSuccessState({required this.bikes});
 
-  @override
-  List<Object> get props => [bikesList, pageIndex];
+  final List<BikeModel> bikes;
+}
+
+final class AvailableBikesErrorState extends AvailableBikesState {
+  AvailableBikesErrorState({required this.errorMessage});
+
+  final String errorMessage;
 }

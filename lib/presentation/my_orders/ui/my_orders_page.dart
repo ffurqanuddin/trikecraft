@@ -25,6 +25,8 @@ class MyOrdersPage extends StatelessWidget {
             "My Orders",
             style: TextStyle(fontFamily: AppFonts.poppins),
           ),
+          
+          
           bottom: TabBar(
             tabs: [
               Tab(text: "New Orders"),
@@ -32,7 +34,8 @@ class MyOrdersPage extends StatelessWidget {
             ],
           ),
         ),
-        floatingActionButton: WhatsAppNowFloatingActionButtonWidget(),
+
+        floatingActionButton: WhatsAppNowButtonWidget(),
         body: TabBarView(
           children: [
             // New Orders Tab

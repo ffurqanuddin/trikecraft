@@ -18,7 +18,6 @@ import 'package:trikecraft/logic/available_bikes/available_bikes_bloc.dart';
 import 'package:trikecraft/logic/theme/theme_cubit.dart';
 import 'base/di/dependency_injection.dart';
 import 'base/services/hive/hive_services.dart';
-import 'base/services/notification/app_notification.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -30,9 +29,6 @@ void main() async {
 
   ///--- Initialize Get It
   getItSetup();
-
-  ///--- Initialize Notification
-  NotificationService().initNotification();
 
   //!  Initialize Hive Database
   await MyHive.initializeHive();
@@ -75,6 +71,10 @@ class MyApp extends StatelessWidget {
           create: (context) => CustomizedBikeOrderBloc(
               firestoreOrdersDataRepository:
                   getIt<FirestoreOrdersDataRepository>()),
+        ),
+        BlocProvider(
+          create: (context) => AvailableBikesBloc(
+              bikesDataRepository: getIt<BikesDataRepository>()),
         ),
       ],
       child: ScreenUtilInit(

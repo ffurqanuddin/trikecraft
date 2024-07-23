@@ -119,41 +119,30 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       AuthWithGoogleEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoadingState());
     try {
-      await authRepository.authWithGoogle().then(
-        (usero) async {
-          // If sign-in is successful, emit success state
-          if (usero != null) {
-            emit(AuthSuccessState());
+      final user = await authRepository.authWithGoogle();
 
-            final userData = UserModel(
-              fullName: usero.displayName ?? "User",
-              email: usero.email ?? "email",
-              profilePicture: usero.photoURL ?? "",
-              userId: usero.uid,
-            );
+      if (user != null) {
+        emit(AuthSuccessState());
 
-            ///---- Add User Data to Firestore
-            await firestoreRepository.addNewUser(userData);
+        final userData = UserModel(
+          fullName: user.displayName ?? "User",
+          email: user.email ?? "email",
+          profilePicture: user.photoURL ?? "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg",
+          userId: user.uid,
+        );
 
-            // Set the user as logged in using Hive storage
-            await MyHiveBoxes.settingBox.put(MyHiveKeys.userIsLoggedIn, true);
-
-            emit(AuthInitialState());
-          } else {
-            // If sign-in fails, emit failure state with an error message
-            emit(AuthFailureState(errorMessage: 'Sign in failed'));
-          }
-        },
-      ).catchError((e) {
-        // If sign-in fails, emit failure state with an error message
-        emit(AuthFailureState(errorMessage: e.toString()));
-      });
+        await firestoreRepository.addNewUser(userData);
+        await MyHiveBoxes.settingBox.put(MyHiveKeys.userIsLoggedIn, true);
+        emit(AuthInitialState());
+      } else {
+        emit(AuthFailureState(errorMessage: 'Sign in failed'));
+      }
     } catch (e) {
-      // If sign-in fails, emit failure state with an error message
       emit(AuthFailureState(errorMessage: e.toString()));
       OneContext().pop();
     }
   }
+
 
   FutureOr<void> _logOutEvent(
       LogOutEvent event, Emitter<AuthState> emit) async {
