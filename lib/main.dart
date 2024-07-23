@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:trikecraft/base/cache/cache.dart';
 import 'package:trikecraft/base/routes/app_router.dart';
 import 'package:trikecraft/base/routes/app_routes.dart';
 import 'package:trikecraft/base/themes/app_themes.dart';
@@ -11,6 +12,7 @@ import 'package:trikecraft/data/repository/bikes_data_repository.dart';
 import 'package:trikecraft/data/repository/firestore_order_data_repository.dart';
 import 'package:trikecraft/data/repository/firestore_user_data_repository.dart';
 import 'package:trikecraft/logic/auth/auth_bloc.dart';
+import 'package:trikecraft/logic/available_pageview_changed/available_page_view_changed_cubit.dart';
 import 'package:trikecraft/logic/current_user/current_user_bloc.dart';
 import 'package:trikecraft/logic/customized_bike_order/customized_bike_order_bloc.dart';
 import 'package:trikecraft/logic/greeting_text/greeting_cubit.dart';
@@ -32,6 +34,7 @@ void main() async {
 
   //!  Initialize Hive Database
   await MyHive.initializeHive();
+
 
   //! Setting preferred orientations
   SystemChrome.setPreferredOrientations([
@@ -75,6 +78,9 @@ class MyApp extends StatelessWidget {
         BlocProvider(
           create: (context) => AvailableBikesBloc(
               bikesDataRepository: getIt<BikesDataRepository>()),
+        ),
+        BlocProvider(
+          create: (context) => AvailablePageViewChangedCubit(),
         ),
       ],
       child: ScreenUtilInit(

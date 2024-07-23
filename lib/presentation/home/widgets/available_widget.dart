@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:trikecraft/base/assets/app_fonts.dart';
+import 'package:trikecraft/logic/available_pageview_changed/available_page_view_changed_cubit.dart';
 import '../../../logic/available_bikes/available_bikes_bloc.dart';
 
 class AvailableWidget extends StatefulWidget {
@@ -27,10 +28,6 @@ class _AvailableWidgetState extends State<AvailableWidget> {
     _pageViewController = PageController(initialPage: _pageIndex);
   }
 
-
-  
-
-
   @override
   Widget build(BuildContext context) {
     return Expanded(
@@ -40,6 +37,8 @@ class _AvailableWidgetState extends State<AvailableWidget> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Gap(0.02.sh),
+
+              ///------------ Heading ------------///
               Center(
                 child: Text(
                   "Available",
@@ -51,12 +50,16 @@ class _AvailableWidgetState extends State<AvailableWidget> {
                 ),
               ),
               Gap(0.01.sh),
+
+              ///-------------  Loading ------------------///
               if (state is AvailableBikesLoadingState)
                 const Expanded(
                   child: Center(
                     child: CircularProgressIndicator(),
                   ),
                 ),
+
+              ///----------- If Loaded Successfully  --------------///
               if (state is AvailableBikesSuccessState)
                 Expanded(
                   child: Container(
@@ -64,106 +67,123 @@ class _AvailableWidgetState extends State<AvailableWidget> {
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(20),
                     ),
-                    child: PageView.builder(
-                      scrollDirection: Axis.horizontal,
-                      controller: _pageViewController,
-                      physics: const BouncingScrollPhysics(),
-                      itemCount: state.bikes.length,
-                      onPageChanged: onPageChanged,
-                      itemBuilder: (context, index) {
-                        final bike = state.bikes[index];
+                    child: BlocBuilder<AvailablePageViewChangedCubit,
+                            AvailablePageViewChangedState>(
+                        builder: (context, pageState) {
+                      return PageView.builder(
+                        scrollDirection: Axis.horizontal,
+                        controller: _pageViewController,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: state.bikes.length,
+                        onPageChanged: onPageChanged,
+                        itemBuilder: (context, index) {
+                          final bike = state.bikes[pageState.pageIndex];
 
+                          return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Container(
+                              height: 0.25.sh,
+                              width: 0.9.sw,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
 
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Container(
-                            height: 0.25.sh,
-                            width: 0.9.sw,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              image: DecorationImage(
-                                image: CachedNetworkImageProvider(bike.picture),
-
-                                fit: BoxFit.contain,
+                                //------------------------ Bike Picture --------------///
+                                image: DecorationImage(
+                                  image:
+                                      CachedNetworkImageProvider(bike.picture),
+                                  fit: BoxFit.contain,
+                                ),
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Stack(
-                              children: [
-                                Align(
-                                  alignment: Alignment.topLeft,
-                                  child: FadeInLeft(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(2),
-                                      margin: const EdgeInsets.only(top: 20, left: 10),
-                                      decoration: BoxDecoration(
-                                        color: const Color.fromARGB(255, 238, 0, 255),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Text(
-                                        " ${bike.company} ",
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold,
+                              child: Stack(
+                                children: [
+                                  //------------------------ Bike Company --------------///
+                                  Align(
+                                    alignment: Alignment.topLeft,
+                                    child: FadeInLeft(
+                                      child: Container(
+                                        padding: const EdgeInsets.all(2),
+                                        margin: const EdgeInsets.only(
+                                            top: 20, left: 10),
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                              255, 238, 0, 255),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Text(
+                                          " ${bike.company} ",
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Align(
-                                  alignment: Alignment.topRight,
-                                  child: FadeInRight(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(6),
-                                      margin: const EdgeInsets.only(top: 20, right: 10),
-                                      decoration: BoxDecoration(
-                                        color: const Color.fromARGB(255, 255, 213, 0),
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Text(
-                                        "Model ${bike.model} ",
 
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.bold,
+                                  //------------------------ Bike Model --------------///
+                                  Align(
+                                    alignment: Alignment.topRight,
+                                    child: FadeInRight(
+                                      child: Container(
+                                        padding: const EdgeInsets.all(6),
+                                        margin: const EdgeInsets.only(
+                                            top: 20, right: 10),
+                                        decoration: BoxDecoration(
+                                          color: const Color.fromARGB(
+                                              255, 255, 213, 0),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Text(
+                                          "Model ${bike.model} ",
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                                Align(
-                                  alignment: Alignment.bottomRight,
-                                  child: FadeInRight(
-                                    child: Container(
-                                      padding: const EdgeInsets.all(2),
-                                      margin: const EdgeInsets.all(10),
-                                      decoration: BoxDecoration(
-                                        color: Colors.red,
-                                        borderRadius: BorderRadius.circular(10),
-                                      ),
-                                      child: Text(
-                                        "Price ${bike.price} PKR ",
 
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 15.sp,
-                                          fontFamily: AppFonts.poppins,
+                                  //------------------------ Bike Price --------------///
+                                  Align(
+                                    alignment: Alignment.bottomRight,
+                                    child: FadeInRight(
+                                      child: Container(
+                                        padding: const EdgeInsets.all(2),
+                                        margin: const EdgeInsets.all(10),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red,
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                        ),
+                                        child: Text(
+                                          "Price ${bike.price} PKR ",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 15.sp,
+                                            fontFamily: AppFonts.poppins,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
+                          );
+                        },
+                      );
+                    }),
                   ),
                 ),
               if (state is AvailableBikesSuccessState)
+
+                ///-----------------  Dot Indicators ------------------///
                 Padding(
                   padding: EdgeInsets.all(10.sp),
                   child: Align(
@@ -172,13 +192,14 @@ class _AvailableWidgetState extends State<AvailableWidget> {
                       controller: _pageViewController,
                       count: state.bikes.length,
                       axisDirection: Axis.horizontal,
-                      onDotClicked: onDotClicked,
                       effect: ExpandingDotsEffect(
                         activeDotColor: Theme.of(context).primaryColor,
                       ),
                     ),
                   ),
                 ),
+
+              ///-----------------  If Error ---------------///
               if (state is AvailableBikesErrorState)
                 Expanded(
                   child: Center(
@@ -202,16 +223,6 @@ class _AvailableWidgetState extends State<AvailableWidget> {
   }
 
   void onPageChanged(int index) {
-    setState(() {
-      _pageIndex = index;
-    });
-  }
-
-  void onDotClicked(int index) {
-    setState(() {
-      _pageViewController.jumpToPage(index);
-      _pageIndex = index;
-    });
+    context.read<AvailablePageViewChangedCubit>().changedPage(index);
   }
 }
-
