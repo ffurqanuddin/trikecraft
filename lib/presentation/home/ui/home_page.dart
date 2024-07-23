@@ -37,19 +37,18 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             //---- Available Bikes
-            AvailableWidget(),
-
+            Expanded(child: AvailableWidget()),
+        
             //----------- Customize your Old bike
             BounceInUp(
-              child: Center(
-                  child: CustomElevatedIconButtonWidget(
-                      label: "Craft Your Old Bike",
-                      icon: FontAwesomeIcons.screwdriverWrench,
-                      onPressed: () {
-                        print("Craft Button On Pressed");
-                        Navigator.pushNamed(
-                            context, AppRoutes.craftYourCustomBikeRoute);
-                      })),
+              child: CustomElevatedIconButtonWidget(
+                  label: "Craft Your Old Bike",
+                  icon: FontAwesomeIcons.screwdriverWrench,
+                  onPressed: () {
+                    print("Craft Button On Pressed");
+                    Navigator.pushNamed(
+                        context, AppRoutes.craftYourCustomBikeRoute);
+                  }),
             )
           ],
         ),

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:trikecraft/base/cache/cache.dart';
 import 'package:trikecraft/base/routes/app_router.dart';
 import 'package:trikecraft/base/routes/app_routes.dart';
 import 'package:trikecraft/base/themes/app_themes.dart';

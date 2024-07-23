@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:trikecraft/base/routes/app_routes.dart';
+import 'package:trikecraft/models/bike_model.dart';
 import 'package:trikecraft/presentation/auth/ui/forgot_password_page.dart';
 import 'package:trikecraft/presentation/craft_your_old_bike/ui/craft_your_old_bike_page.dart';
 import 'package:trikecraft/presentation/my_orders/ui/my_orders_page.dart';
+import 'package:trikecraft/presentation/product_view/ui/product_view.dart';
 import 'package:trikecraft/presentation/setting/ui/settings_page.dart';
 import 'package:trikecraft/presentation/splash/ui/splash_page.dart';
 import 'package:trikecraft/presentation/user_profile/ui/profile_page.dart';
@@ -48,6 +50,14 @@ class AppRouter {
 
       case AppRoutes.userProfileRoute:
         return MaterialPageRoute(builder: (_) => const ProfilePage());
+
+      case AppRoutes.productViewRoute:
+        var arguments = settings.arguments as Map<String, dynamic>;
+        var bike = arguments['bikeFromAvailablePage'] as BikeModel;
+        return MaterialPageRoute(
+          builder: (_) => ProductViewPage(bike: bike),
+        );
+
       default:
         return MaterialPageRoute(
             builder: (_) => Scaffold(

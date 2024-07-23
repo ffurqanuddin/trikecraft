@@ -12,6 +12,8 @@ class AppRoutes {
 
   static const String settingRoute = '/setting';
   static const String userProfileRoute = '/profile';
+  static const String productViewRoute = '/product_view';
+
 
   static const String forgotPasswordRoute = '/forgot_password';
 }
