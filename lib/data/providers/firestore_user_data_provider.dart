@@ -1,12 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:trikecraft/base/di/dependency_injection.dart';
 import 'package:trikecraft/data/providers/firebase_auth_providers.dart';
+import 'package:trikecraft/models/feedback_model.dart';
 import 'package:trikecraft/models/user_model.dart';
 
 class FirestoreUserDataProvider {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   static const String usersCollection = "Users";
+  static const String feedbackCollection = "feedbacks";
 
   // Save user data to Firestore
   Future<void> saveUserData({required UserModel user}) async {
@@ -73,5 +77,38 @@ class FirestoreUserDataProvider {
     } else {
       return null; // Return null if userEmail is null
     }
+  }
+
+  // Check User is Admin
+// Retrieve user data from Firestore by document ID and check if user is admin
+  Future<bool> checkUserIsAdmin() async {
+    try {
+      final User? currentUser = FirebaseAuth.instance.currentUser;
+      if (currentUser != null) {
+        final userDoc = await _firestore
+            .collection(usersCollection)
+            .doc(currentUser.email)
+            .get();
+        if (userDoc.exists) {
+          final data = userDoc.data();
+          if (data != null && data.containsKey('isAdmin')) {
+            return data['isAdmin'] == true;
+          }
+        }
+      }
+    } catch (e) {
+      print("Error retrieving user data: $e");
+      // Handle the error accordingly
+    }
+    return false;
+  }
+
+  // Save user feedback data to Firestore
+  Future<void> saveUserFeedback({required UserFeedbackModel feedback}) async {
+    User? _user = await FirebaseAuthProviders().getCurrentUserData.currentUser;
+    await _firestore
+        .collection(feedbackCollection)
+        .doc(_user?.email ?? DateTime.now().microsecondsSinceEpoch.toString())
+        .set(feedback.toMap());
   }
 }

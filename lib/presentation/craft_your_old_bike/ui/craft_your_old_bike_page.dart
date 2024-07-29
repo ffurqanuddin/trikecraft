@@ -99,7 +99,7 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
             }
 
             if (state is CustomizedBikeOrderDataSavingFailureState) {
-              MySnackbars.simple(context: context, content: state.errorMessage);
+              MySnackbars.showSimpleSnackbar(context, message: state.errorMessage);
             }
           },
           child: Column(
@@ -357,8 +357,8 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
     if (_addressTextEditingController.text.isEmpty &&
         _contactTextEditingController.text.isEmpty) {
       print("\nForms are empty\n");
-      MySnackbars.simple(
-          context: context, content: "Please fill the address & contact form");
+      MySnackbars.showSimpleSnackbar(
+          context,message: "Please fill the address & contact form");
     } else {
       customOrderModalSheet();
     }
@@ -648,7 +648,7 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
                                           kick: _kick,
                                           tyreSize: _tyreSize,
                                           transmission: _transmission,
-                                          totalPrice: calculateTotalPrice(),
+                                          totalPrice: calculateTotalPrice().toString(),
                                           orderDate: DateTime.now(),
                                           orderStatus: "pending",
                                           extraDetail:
@@ -670,7 +670,7 @@ class _CraftYourCustomBikePageState extends State<CraftYourCustomBikePage> {
   }
 }
 
-getCurrentUserData() async {
+ getCurrentUserData() async {
   final firebaseAuthProviders = getIt<FirebaseAuthProviders>();
   return firebaseAuthProviders.getCurrentUserData.currentUser;
 }

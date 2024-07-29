@@ -1,16 +1,12 @@
 import 'dart:io';
-import 'package:animate_do/animate_do.dart';
+
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:eva_icons_flutter/eva_icons_flutter.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:one_context/one_context.dart';
-
-import '../../../logic/theme/theme_cubit.dart';
-import '../widgets/blur_background_profile_image_widget.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:trikecraft/base/services/hive/hive_services.dart';
+import 'package:trikecraft/logic/change_user_profile/change_user_profile_cubit.dart';
+import 'package:trikecraft/utils/snackbars.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -20,305 +16,160 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  late TextEditingController usernameController;
+  late String profileImageUrl; // Replace with your profile image URL
+  late TextEditingController _nameController;
+  XFile? temporaryPickedImage;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    usernameController = TextEditingController();
+    profileImageUrl = profileImageFromHive() ?? "";
+    _nameController = TextEditingController(text: profileNameFromHive() ?? "");
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    usernameController.dispose();
-  }
+  String profileImageFromHive() =>
+      MyHiveBoxes.settingBox.get(MyHiveKeys.userProfilePicHiveKey);
+  String profileNameFromHive() =>
+      MyHiveBoxes.settingBox.get(MyHiveKeys.userNameHiveKey);
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.transparent,
       extendBodyBehindAppBar: true,
       appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            icon: const Icon(
-              CupertinoIcons.back,
-              color: Colors.white,
-            )),
+        title: Text('Profile', style: TextStyle(color: Colors.white)),
         backgroundColor: Colors.transparent,
+        elevation: 0,
       ),
-      body: Stack(fit: StackFit.expand, children: [
-        ///!---------------------------------------------------//
-        ///?-----------------  Profile Image    --------- ///
-        ///!---------------------------------------------------//
-        const _ProfileImageCircleAvatarButton(),
+      body: BlocConsumer<ChangeUserProfileCubit, ChangeUserProfileState>(
+        listener: (context, state) {
+          if (state is ChangeUserProfileSuccessfullyUpdatedState) {
+            MySnackbars.showSimpleSnackbar(context, message: "Profile is updated");
+            Navigator.pop(context);
+          }
 
-        ///!---------------------------------------------------//
-        ///?-----------------  Background Image    --------- ///
-        ///!---------------------------------------------------//
-        const BlurBackgroundProfileImageWidget(),
-
-        ///!---------------------------------------------------//
-        ///?------------   Main Center Box   -------------------////
-        ///!---------------------------------------------------//
-        Center(
-          child: CustomGradientGlassCardWidget(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ///!---------------------------------------------------//
-                ///?------------   Profile Image   -------------------////
-                ///!---------------------------------------------------//
-                const _ProfileImageWidget(),
-
-                ///!---------------------------------------------------//
-                ///?------------   Profile Name Field   -------------------////
-                ///!---------------------------------------------------//
-
-                _ProfileNameTextFieldWidget(
-                    usernameController: usernameController),
-
-                ///!---------------------------------------------------//
-                ///?------------   Save Button   -------------------////
-                ///!---------------------------------------------------//
-                _SaveButtonWidget(usernameController: usernameController)
-              ],
-            ),
-          ),
-        ),
-      ]),
-    );
-  }
-}
-
-///!---------------------------------------------------//
-///?-----------------  Profile Image    --------- ///
-///!---------------------------------------------------//
-
-class _ProfileImageCircleAvatarButton extends StatelessWidget {
-  const _ProfileImageCircleAvatarButton();
-
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeState>(
-      builder: (context, state) {
-        return Container(
-          height: 0.3.sh,
-          decoration: BoxDecoration(
-              color: Theme.of(context).primaryColor,
-              borderRadius: const BorderRadius.only(
-                bottomLeft: Radius.circular(13),
-                bottomRight: Radius.circular(13),
-              )),
-          child: Center(
-            child: SizedBox(
-              // color: Colors.amber,
-              height: 0.4.sw,
-              width: 0.4.sw,
-              child: Stack(children: [
-                ///! ----------   Profile Image
-                CircleAvatar(
-                  maxRadius: 100,
-                  minRadius: 30,
-                  backgroundImage: CachedNetworkImageProvider(
-                      FirebaseAuth.instance.currentUser?.photoURL ??
-                          "https://wallpapercave.com/wp/wp6050770.jpg"),
-                ),
-
-                ///!------  Profile Pic Change Button
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Align(
-                    alignment: Alignment.bottomRight,
-                    child: CircleAvatar(
-                        child: IconButton(
-                            onPressed: () {},
-                            icon: const Icon(
-                              EvaIcons.edit,
-                            ))),
-                  ),
-                )
-              ]),
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-///!---------------------------------------------------//
-///?------------   Profile Name Field   -------------------////
-///!---------------------------------------------------//
-
-class _ProfileNameTextFieldWidget extends StatelessWidget {
-  const _ProfileNameTextFieldWidget({
-    required this.usernameController,
-  });
-
-  final TextEditingController usernameController;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(13.spMax),
-      child: BlocBuilder<ThemeCubit, ThemeState>(
-        builder: (context, themeState) {
-          return Column(
+          if (state is ChangeUserProfileFailureState) {
+            MySnackbars.showErrorSnackbar(context, message: state.errorMessage);
+          }
+        },
+        builder: (context, state) {
+          return Stack(
             children: [
-              Align(
-                  alignment: AlignmentDirectional.centerStart,
-                  child: Text(
-                    "Profile Name",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 15.spMax,
-                        color: themeState.isDarkMode ? null : Colors.white70),
-                  )),
-              TextField(
-                maxLines: 1,
-                onSubmitted: (value) {},
-                controller: usernameController,
-                decoration: InputDecoration(
-                  hintText:
-                      FirebaseAuth.instance.currentUser?.displayName ?? "User",
-                  hintStyle: const TextStyle(color: Colors.white38),
-                  border: InputBorder.none,
-                  enabled: true,
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF0F2027), Color(0xFF2C5364)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
                 ),
-                style: const TextStyle(color: Colors.white),
-                cursorColor: Colors.white,
+              ),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Stack(
+                        children: [
+                          CircleAvatar(
+                            radius: 60,
+                            backgroundImage: temporaryPickedImage != null
+                                ? FileImage(File(temporaryPickedImage!.path))
+                                : CachedNetworkImageProvider(profileImageUrl)
+                                    as ImageProvider,
+                          ),
+                          Positioned(
+                            bottom: 0,
+                            right: 4,
+                            child: CircleAvatar(
+                              radius: 20,
+                              backgroundColor: Colors.blueAccent,
+                              child: IconButton(
+                                icon: Icon(Icons.edit, color: Colors.white),
+                                onPressed: () async {
+                                  final _picker = ImagePicker();
+                                  XFile? pickedImage = await _picker.pickImage(
+                                      source: ImageSource.gallery);
+
+                                  if (pickedImage != null) {
+                                    setState(() {
+                                      temporaryPickedImage = pickedImage;
+                                    });
+                                  }
+                                },
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 20),
+                      Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.white.withOpacity(0.2)),
+                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        child: TextField(
+                          controller: _nameController,
+                          onTapOutside: (p){
+                            FocusManager.instance.primaryFocus?.unfocus();
+                          },
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            hintText: 'Enter your name',
+                            hintStyle: TextStyle(color: Colors.white54),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 40),
+                      ElevatedButton(
+                        onPressed: () {
+                          if (_nameController.text.isNotEmpty) {
+                            context.read<ChangeUserProfileCubit>().changeUserName(
+                                username: _nameController.text.toString().trim());
+                          }
+                          if (temporaryPickedImage != null) {
+                            context
+                                .read<ChangeUserProfileCubit>()
+                                .changeUserProfilePicture(pickedFile: temporaryPickedImage!);
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          
+                        ),
+                        child: state is ChangeUserProfileLoadingState
+                            ? CircularProgressIndicator(
+                                color: Colors.white,
+                              )
+                            : Text(
+                                'Update Profile',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                ),
+                              ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           );
         },
       ),
-    );
-  }
-}
-
-///!---------------------------------------------------//
-///?------------   Profile Image   -------------------////
-///!---------------------------------------------------//
-class _ProfileImageWidget extends StatelessWidget {
-  const _ProfileImageWidget();
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      // color: Colors.amber,
-      height: 0.4.sw,
-      width: 0.4.sw,
-      child: Stack(children: [
-        SpinPerfect(
-            child: CircleAvatar(
-                maxRadius: 100,
-                minRadius: 30,
-                backgroundImage: CachedNetworkImageProvider(FirebaseAuth.instance.currentUser?.photoURL ??
-                    "https://wallpapercave.com/wp/wp6050770.jpg"),),),
-
-        ///!------  Profile Pic Change Button
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Align(
-            alignment: Alignment.bottomRight,
-            child: FadeIn(
-              child: CircleAvatar(
-                  child: IconButton(
-                      onPressed: () {
-                        
-                      },
-                      icon: const Icon(
-                        EvaIcons.edit,
-                      ))),
-            ),
-          ),
-        )
-      ]),
-    );
-  }
-}
-
-///!---------------------------------------------------//
-///?------------   Save Button   -------------------////
-///!---------------------------------------------------//
-class _SaveButtonWidget extends StatelessWidget {
-  const _SaveButtonWidget({
-    required this.usernameController,
-  });
-
-  final TextEditingController usernameController;
-
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-       
-      },
-      child: BlocBuilder<ThemeCubit, ThemeState>(
-        builder: (context, state) {
-          return Padding(
-            padding: EdgeInsets.symmetric(horizontal: 13.spMax),
-            child: BounceInUp(
-              child: Card(
-                margin: EdgeInsets.zero,
-                elevation: 1,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20)),
-                child: Container(
-                  constraints: BoxConstraints(
-                    minWidth: 0.5.sw,
-                    maxWidth: 0.8.sw,
-                    minHeight: 0.05.sh,
-                    maxHeight: 0.07.sh,
-                  ),
-                  decoration: BoxDecoration(
-                      color: Theme.of(context).primaryColor.withOpacity(0.8),
-                      borderRadius: BorderRadius.circular(20)),
-                  alignment: Alignment.center,
-                  child: Text(
-                    "Save",
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14.spMax),
-                  ),
-                ),
-              ),
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class CustomGradientGlassCardWidget extends StatelessWidget {
-  const CustomGradientGlassCardWidget(
-      {super.key, required this.child, this.height, this.width});
-
-  final height;
-  final width;
-  final Widget child;
-  @override
-  Widget build(BuildContext context) {
-    return BlocBuilder<ThemeCubit, ThemeState>(
-      builder: (context, themeState) {
-        return Container(
-          height: height ?? 0.5.sh,
-          width: width ?? 0.8.sw,
-          decoration: BoxDecoration(
-              color: themeState.isDarkMode
-                  ? Colors.black.withOpacity(0.12)
-                  : Colors.white.withOpacity(0.12),
-              borderRadius: BorderRadius.circular(20)),
-          child: child,
-        );
-      },
     );
   }
 }

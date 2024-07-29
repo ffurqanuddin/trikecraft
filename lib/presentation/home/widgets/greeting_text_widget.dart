@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trikecraft/base/assets/app_fonts.dart';
 import 'package:trikecraft/logic/greeting_text/greeting_cubit.dart';
 
+import '../../../base/services/hive/hive_services.dart';
+
 class GreetingTextWidget extends StatelessWidget {
   const GreetingTextWidget({
     super.key,
@@ -26,12 +28,16 @@ class GreetingTextWidget extends StatelessWidget {
               ),
             ),
             Text(
-              FirebaseAuth.instance.currentUser?.displayName??"User",
+              userName() ?? "User",
               style: TextStyle(fontSize: 16, fontFamily: AppFonts.poppins),
             )
           ],
         );
       },
     );
+  }
+
+  String userName() {
+    return MyHiveBoxes.settingBox.get(MyHiveKeys.userNameHiveKey);
   }
 }

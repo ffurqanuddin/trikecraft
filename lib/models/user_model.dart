@@ -5,13 +5,15 @@ class UserModel {
     required this.fullName,
     required this.email,
     required this.profilePicture,
-    required this.userId
+    required this.userId,
+    required this.isAdmin,
   });
 
   final String fullName;
   final String email;
   final String profilePicture;
   final String userId;
+  final bool isAdmin;
   
 
   // Factory method to create a UserModel from a Firestore document
@@ -22,6 +24,7 @@ class UserModel {
       email: data['email'] ?? '',
       profilePicture: data['profilePicture'] ?? '',
       userId: data['userId'] ?? '',
+      isAdmin: data['isAdmin']?? false
 
     );
   }
@@ -32,7 +35,8 @@ class UserModel {
       'fullName': fullName,
       'email': email,
       'profilePicture': profilePicture,
-      'userId': userId
+      'userId': userId,
+      'isAdmin': isAdmin
     };
   }
 }

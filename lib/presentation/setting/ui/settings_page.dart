@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
+import 'package:trikecraft/base/routes/app_routes.dart';
 import 'package:trikecraft/logic/auth/auth_bloc.dart';
 import 'package:trikecraft/logic/theme/theme_cubit.dart';
 import 'package:trikecraft/presentation/setting/widgets/change_theme_expansion_tile_widget.dart';
@@ -62,7 +63,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingsListTileWidget(
                   title: "Profile",
                   iconData: CupertinoIcons.person,
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.pushNamed(context, AppRoutes.userProfileRoute);
+                  },
                 ),
 
                 _divider(),
@@ -71,8 +74,8 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingsListTileWidget(
                   title: "Feedback",
                   iconData: Icons.feedback,
-                  onTap: () async {
-                    // await _feedBackButtonOnTap();
+                  onTap: ()  {
+                    Navigator.pushNamed(context, AppRoutes.UserFeedbackPageRoute);
                   },
                 ),
 
@@ -157,14 +160,5 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   ///!------------ Feedback On Tap
-  // Future<void> _feedBackButtonOnTap() async {
-  //   final Email sendEmail = Email(
-  //     body: 'your feed back?',
-  //     subject: 'TrikeCraft Feedback',
-  //     recipients: ['furqanuddin@gmail.com'],
-  //     isHTML: false,
-  //   );
 
-  //   await FlutterEmailSender.send(sendEmail);
-  // }
 }

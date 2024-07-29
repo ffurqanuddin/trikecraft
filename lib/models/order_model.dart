@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'bike_model.dart';
 
-class OrderModel {
+class NewOrderModel {
   String orderId;
   String userName;
   String userEmail;
@@ -15,7 +15,7 @@ class OrderModel {
   double totalPrice;
   String paymentMethod;
 
-  OrderModel({
+  NewOrderModel({
     required this.orderId,
     required this.userName,
     required this.userEmail,
@@ -29,8 +29,8 @@ class OrderModel {
     required this.paymentMethod,
   });
 
-  factory OrderModel.fromFirestore(Map<String, dynamic> doc) {
-    return OrderModel(
+  factory NewOrderModel.fromFirestore(Map<String, dynamic> doc) {
+    return NewOrderModel(
       orderId: doc['orderId'] as String,
       userName: doc['userName'] as String,
       userEmail: doc['userEmail'] as String,

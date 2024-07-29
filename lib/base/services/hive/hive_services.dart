@@ -26,4 +26,10 @@ class MyHiveKeys {
   
   static const String darkModeHiveKey = "hive_dark_mode";
   static const String showOnBoardingScreenHiveKey = "hive_show_on_boarding";
+  static const String userNameHiveKey = "user_name";
+  static const String userProfilePicHiveKey = "user_profile_pic";
+  static const String userEmailHiveKey = "user_email";
+
+
+
 }

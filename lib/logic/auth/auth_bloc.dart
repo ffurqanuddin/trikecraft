@@ -30,51 +30,67 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       SignInWithEmailEvent event, Emitter<AuthState> emit) async {
     emit(AuthLoadingState());
     try {
-      // Attempt to sign in the user with the provided email and password
-      final userId = await authRepository.signInWithEmailAndPassword(
+      // Attempt to sign in the user
+      final User? user = await authRepository.signInWithEmailAndPassword(
         email: event.email,
         password: event.password,
       );
-      // If sign-in is successful, emit success state
-      if (userId != null) {
+
+      if (user != null) {
+        await _handleSuccessfulSignIn(user, event.email);
         emit(AuthSuccessState());
-
-        // Set the user as logged in using Hive storage
-        await MyHiveBoxes.settingBox.put(MyHiveKeys.userIsLoggedIn, true);
-
-        emit(AuthInitialState());
       } else {
-        // If sign-in fails, emit failure state with an error message
         emit(AuthFailureState(errorMessage: 'Sign in failed'));
-        OneContext().pop();
       }
     } on FirebaseAuthException catch (e) {
-      // Handle specific Firebase authentication exceptions
-      String errorMessage;
-      switch (e.code) {
-        case 'invalid-credential':
-          errorMessage = 'user is not registered';
-        case 'invalid-email':
-          errorMessage = 'The email address is not valid.';
-          break;
-        case 'user-disabled':
-          errorMessage = 'The user has been disabled.';
-          break;
-        case 'user-not-found':
-          errorMessage = 'No user found for this email.';
-          break;
-        case 'wrong-password':
-          errorMessage = 'The password is incorrect.';
-          break;
-
-        default:
-          errorMessage = 'An unknown error occurred.';
-      }
-      emit(AuthFailureState(errorMessage: errorMessage));
+      emit(AuthFailureState(errorMessage: _getFirebaseAuthErrorMessage(e)));
     } catch (e) {
-      // If there is an exception, emit failure state with the exception message
-      emit(AuthFailureState(errorMessage: e.toString()));
+      emit(AuthFailureState(errorMessage: 'An unexpected error occurred'));
       OneContext().pop();
+    }
+  }
+
+  
+
+  Future<void> _handleSuccessfulSignIn(User user, String email) async {
+    if (await firestoreRepository.checkUserIsAdmin()) {
+      await _setAdminPreferences();
+    } else {
+      await MyHiveBoxes.settingBox.put(MyHiveKeys.userIsLoggedIn, true);
+    }
+
+    UserModel? userData = await firestoreRepository.getCurrentUserData();
+    await _saveUserDataToLocalStorage(userData, email);
+  }
+
+  Future<void> _setAdminPreferences() async {
+    await MyHiveBoxes.settingBox.put(MyHiveKeys.isAdminLoggedIn, true);
+    await MyHiveBoxes.settingBox.put(MyHiveKeys.darkModeHiveKey, true);
+  }
+
+  Future<void> _saveUserDataToLocalStorage(
+      UserModel? user, String email) async {
+    await MyHiveBoxes.settingBox.put(MyHiveKeys.userEmailHiveKey, email);
+    await MyHiveBoxes.settingBox
+        .put(MyHiveKeys.userNameHiveKey, user?.fullName ?? "User");
+    await MyHiveBoxes.settingBox
+        .put(MyHiveKeys.userProfilePicHiveKey, user?.profilePicture);
+  }
+
+  String _getFirebaseAuthErrorMessage(FirebaseAuthException e) {
+    switch (e.code) {
+      case 'invalid-credential':
+        return 'User is not registered';
+      case 'invalid-email':
+        return 'The email address is not valid';
+      case 'user-disabled':
+        return 'The user has been disabled';
+      case 'user-not-found':
+        return 'No user found for this email';
+      case 'wrong-password':
+        return 'The password is incorrect';
+      default:
+        return 'An authentication error occurred';
     }
   }
 
@@ -91,18 +107,23 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       // If sign-up is successful, save the user data to Firestore
       if (userData != null) {
         final user = UserModel(
-          fullName: event.fullName,
-          email: event.email,
-          profilePicture: event.profilePicture,
-          userId: userData.uid.toString(),
-        );
+            fullName: event.fullName,
+            email: event.email,
+            profilePicture: event.profilePicture,
+            userId: userData.uid.toString(),
+            isAdmin: false);
         await firestoreRepository.addNewUser(user);
-        emit(AuthSuccessState());
+
+        await MyHiveBoxes.settingBox
+            .put(MyHiveKeys.userNameHiveKey, event.fullName);
+        await MyHiveBoxes.settingBox
+            .put(MyHiveKeys.userEmailHiveKey, event.email);
+        await MyHiveBoxes.settingBox
+            .put(MyHiveKeys.userProfilePicHiveKey, event.profilePicture);
 
         // Set the user as logged in using Hive storage
         await MyHiveBoxes.settingBox.put(MyHiveKeys.userIsLoggedIn, true);
-
-        emit(AuthInitialState());
+        emit(AuthSuccessState());
       } else {
         // If sign-up fails, emit failure state with an error message
         emit(AuthFailureState(errorMessage: 'Sign up failed'));
@@ -122,27 +143,34 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       final user = await authRepository.authWithGoogle();
 
       if (user != null) {
-        emit(AuthSuccessState());
+        String dummyPic =
+            "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg";
 
         final userData = UserModel(
-          fullName: user.displayName ?? "User",
-          email: user.email ?? "email",
-          profilePicture: user.photoURL ?? "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg",
-          userId: user.uid,
-        );
+            fullName: user.displayName ?? "User",
+            email: user.email ?? "email",
+            profilePicture: user.photoURL ?? dummyPic,
+            userId: user.uid,
+            isAdmin: false);
 
         await firestoreRepository.addNewUser(userData);
         await MyHiveBoxes.settingBox.put(MyHiveKeys.userIsLoggedIn, true);
-        emit(AuthInitialState());
+        await MyHiveBoxes.settingBox
+            .put(MyHiveKeys.userNameHiveKey, user.displayName ?? "User");
+        await MyHiveBoxes.settingBox
+            .put(MyHiveKeys.userEmailHiveKey, user.email ?? "Email");
+        await MyHiveBoxes.settingBox
+            .put(MyHiveKeys.userProfilePicHiveKey, user.photoURL ?? "");
+        emit(AuthSuccessState());
       } else {
         emit(AuthFailureState(errorMessage: 'Sign in failed'));
       }
     } catch (e) {
       emit(AuthFailureState(errorMessage: e.toString()));
       OneContext().pop();
+      OneContext().pop();
     }
   }
-
 
   FutureOr<void> _logOutEvent(
       LogOutEvent event, Emitter<AuthState> emit) async {
@@ -152,10 +180,15 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         () async {
           // Set the user as logged Out using Hive storage
           await MyHiveBoxes.settingBox.put(MyHiveKeys.userIsLoggedIn, false);
+          await MyHiveBoxes.settingBox.put(MyHiveKeys.isAdminLoggedIn, false);
+          await MyHiveBoxes.settingBox.delete(MyHiveKeys.userNameHiveKey);
+          await MyHiveBoxes.settingBox.delete(MyHiveKeys.userEmailHiveKey);
+          await MyHiveBoxes.settingBox.delete(MyHiveKeys.userProfilePicHiveKey);
+
           Navigator.pushNamedAndRemoveUntil(
             event.context,
             AppRoutes.signInRoute,
-            (route) => true,
+            (route) => false,
           );
           emit(AuthSuccessLogOutState());
           emit(AuthInitialState());

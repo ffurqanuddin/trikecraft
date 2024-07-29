@@ -16,7 +16,7 @@ class CustomizationOrderModel {
   String kick;
   String transmission; // "shaft" or "chain"
   String tyreSize;
-  int totalPrice;
+  String totalPrice;
   DateTime orderDate;
   String orderStatus;
   String extraDetail;
@@ -59,7 +59,7 @@ class CustomizationOrderModel {
         kick: doc['kick'] as String,
         transmission: doc['transmission'] as String,
         tyreSize: doc['tyreSize'] as String,
-        totalPrice: doc['totalPrice'] as int,
+        totalPrice: doc['totalPrice'] as String,
         orderDate: (doc['orderDate'] as Timestamp).toDate(),
         orderStatus: doc['orderStatus'] as String,
         extraDetail: doc["extraDetail"] as String);

@@ -1,6 +1,8 @@
 import 'package:trikecraft/data/providers/firestore_user_data_provider.dart';
 import 'package:trikecraft/models/user_model.dart';
 
+import '../../models/feedback_model.dart';
+
 class FirestoreUserDataRepository {
   final FirestoreUserDataProvider firestoreProvider;
 
@@ -47,5 +49,18 @@ class FirestoreUserDataRepository {
       // Handle the error accordingly
     }
     return null;
+  }
+
+  // check user is admin
+  Future<bool> checkUserIsAdmin() async {
+    return await firestoreProvider.checkUserIsAdmin();
+  }
+
+  Future<void> saveUserFeedback({required UserFeedbackModel feedback}) async {
+    try {
+      await firestoreProvider.saveUserFeedback(feedback: feedback);
+    } catch (e) {
+      throw Exception(e);
+    }
   }
 }

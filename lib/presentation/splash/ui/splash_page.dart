@@ -13,7 +13,7 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
-  int spTime = 4;
+  
 
   @override
   void initState() {
@@ -73,18 +73,26 @@ class _SplashPageState extends State<SplashPage> {
   // --- Methods
   // Redirect to next page
   Future<void> redirect() async {
-    await Future.delayed(Duration(seconds: spTime));
+    await Future.delayed(Duration(milliseconds: 2500));
     if(await MyHiveBoxes.settingBox.get(MyHiveKeys.userIsLoggedIn) == true){
          Navigator.pushNamedAndRemoveUntil(
       context,
       AppRoutes.mainRoute,
-      (route) => true,
+      (route) => false,
+    );
+    }else if(await MyHiveBoxes.settingBox.get(MyHiveKeys.isAdminLoggedIn) == true){
+      Navigator.pushNamedAndRemoveUntil(
+      context,
+      AppRoutes.adminDashboardRoute,
+  
+      (route) => false,
     );
     } else{
   Navigator.pushNamedAndRemoveUntil(
       context,
       AppRoutes.landingRoute,
-      (route) => true,
+  
+      (route) => false,
     );
     }
   
