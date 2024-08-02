@@ -8,4 +8,5 @@ class BikesDataProvider {
       getAvailableBikesFromFirestore() async {
     return await _firestore.collection(_bikesCollection).get();
   }
+  
 }

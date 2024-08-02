@@ -15,9 +15,14 @@ class AppRoutes {
   static const String productViewRoute = '/product_view';
   static const String adminUserFeedbacksRoute = "/user_feebacks";
   static const String UserFeedbackPageRoute = "/user_feeback";
+  static const String aboutPageRoute = "/about";
+
 
   static const String adminUserProfileRoute = "/user_data";
-  static const String searchProductsPageRoute ="/search";
+  static const String searchProductsPageRoute = "/search";
+  static const String easypaisaPaymentPageRoute = "/easypaisa_payment";
+  static const String p2pPaymentPageRoute = "/p2p_payment";
+
 
   static const String adminCustomizedBikesOrderPreviewPage =
       "/admin_customized_bikes_order_preview";

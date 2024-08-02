@@ -21,7 +21,7 @@ class AdminGetListCustomizedOrderState extends AdminCustomizableOrderState {
 }
 
 class AdminGetListNewOrderState extends AdminCustomizableOrderState {
-  final Stream<List<NewOrderModel>> OrdersList;
+  final Stream<List<NewBikeOrderModel>> OrdersList;
 
   AdminGetListNewOrderState({required this.OrdersList});
 

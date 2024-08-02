@@ -1,14 +1,15 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:trikecraft/base/assets/app_fonts.dart';
 import 'package:trikecraft/logic/customized_bike_order/customized_bike_order_bloc.dart';
 import 'package:trikecraft/models/customization_order_model.dart';
-import 'package:trikecraft/presentation/my_orders/widgets/info_row.dart';
-import 'package:trikecraft/presentation/my_orders/widgets/my_order_total_price_text_widget.dart';
+import 'info_row.dart';
 
 class CustomizedOrderCardWidget extends StatelessWidget {
   final CustomizationOrderModel order;
@@ -20,7 +21,7 @@ class CustomizedOrderCardWidget extends StatelessWidget {
     return BlocListener<CustomizedBikeOrderBloc, CustomizedBikeOrderState>(
       listener: (context, state) {
         if (state is CustomizedBikeOrderDataCancelFailureState) {
-          showTopSnackBar(OverlayState(), Text(state.errorMessage));
+         Fluttertoast.showToast(msg: state.errorMessage, backgroundColor: Colors.red);
         }
       },
       child: Padding(
@@ -40,9 +41,10 @@ class CustomizedOrderCardWidget extends StatelessWidget {
                   title: Text(
                     "Order No. ${order.orderId}",
                     style: TextStyle(
-                        fontFamily: AppFonts.poppins,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16.sp),
+                      fontFamily: AppFonts.poppins,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.sp,
+                    ),
                   ),
 
                   ///------------- Order Date -------------///
@@ -88,57 +90,107 @@ class CustomizedOrderCardWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ///---------------- User Information  -------------------///
-                          Text(
-                            "User Information",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.sp,
-                                fontFamily: AppFonts.poppins),
+                          _buildGlassContainer(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "User Information",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.sp,
+                                    fontFamily: AppFonts.poppins,
+                                  ),
+                                ),
+                                InfoRow(title: "User", value: order.userName),
+                                InfoRow(title: "Email", value: order.userEmail),
+                                InfoRow(title: "Contact", value: order.contactInfo),
+                                InfoRow(title: "Address", value: order.address),
+                              ],
+                            ),
                           ),
-
-                          InfoRow(title: "User", value: order.userName),
-                          InfoRow(title: "Email", value: order.userEmail),
-                          InfoRow(title: "Contact", value: order.contactInfo),
-                          InfoRow(title: "Address", value: order.address),
                           SizedBox(height: 10),
-                          Text(
-                            "Bike Details",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16.sp,
-                                fontFamily: AppFonts.poppins),
+
+                          ///---------------- Bike Details -------------------///
+                          _buildGlassContainer(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Bike Details",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.sp,
+                                    fontFamily: AppFonts.poppins,
+                                  ),
+                                ),
+                                InfoRow(
+                                    title: "Self Start",
+                                    value: order.selfStart ? "Yes" : "No"),
+                                InfoRow(
+                                    title: "Roof", value: order.roof ? "Yes" : "No"),
+                                InfoRow(title: "Color", value: order.color),
+                                InfoRow(
+                                    title: "Seats", value: order.seats.toString()),
+                                InfoRow(title: "Engine CC", value: order.engineCc),
+                                InfoRow(title: "Brake", value: order.brake),
+                                InfoRow(title: "Gear", value: order.gear),
+                                InfoRow(title: "Tyre Size", value: order.tyreSize),
+                                InfoRow(
+                                    title: "Transmission",
+                                    value: order.transmission),
+                              ],
+                            ),
                           ),
-                          InfoRow(
-                              title: "Self Start",
-                              value: order.selfStart ? "Yes" : "No"),
-                          InfoRow(
-                              title: "Roof", value: order.roof ? "Yes" : "No"),
-                          InfoRow(title: "Color", value: order.color),
-                          InfoRow(
-                              title: "Seats", value: order.seats.toString()),
-                          InfoRow(title: "Engine CC", value: order.engineCc),
-                          InfoRow(title: "Brake", value: order.brake),
-                          InfoRow(title: "Gear", value: order.gear),
-                          InfoRow(title: "Tyre Size", value: order.tyreSize),
-                          InfoRow(
-                              title: "Transmission", value: order.transmission),
                           Gap(10),
 
                           ///---------------- Total Price  -------------------///
-                          MyOrderTotalPriceTextWidget(order: order),
+                          _buildGlassContainer(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Total Price",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16.sp,
+                                    fontFamily: AppFonts.poppins,
+                                  ),
+                                ),
+                                Text(
+                                  "${order.totalPrice.toString()}",
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.bold,
+                                    color: Theme.of(context).primaryColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                           Gap(10.sp),
 
                           ///---------------- Additional Information  -------------------///
-                          Text(
-                            "Additional Details",
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 15.sp),
+                          _buildGlassContainer(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Additional Details",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15.sp,
+                                  ),
+                                ),
+                                Text(
+                                  order.extraDetail.isEmpty
+                                      ? "None"
+                                      : order.extraDetail,
+                                  style: TextStyle(fontSize: 14.sp),
+                                ),
+                              ],
+                            ),
                           ),
-                          Text(
-                              order.extraDetail.isEmpty
-                                  ? "None"
-                                  : order.extraDetail,
-                              style: TextStyle(fontSize: 14.sp)),
                           Gap(20.sp),
                           if (order.orderStatus == "pending")
                             BlocBuilder<CustomizedBikeOrderBloc,
@@ -188,13 +240,39 @@ class CustomizedOrderCardWidget extends StatelessWidget {
     );
   }
 
+  Widget _buildGlassContainer({required Widget child}) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10.sp),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.white.withOpacity(0.3)),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(15),
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: child,
+          ),
+        ),
+      ),
+    );
+  }
+
   Color _getStatusColor(String status) {
-    switch (status) {
-      case "Reviewing" || "review" || "reviewing" || "checking":
+    switch (status.toLowerCase()) {
+      case "reviewing":
+      case "review":
+      case "checking":
         return Colors.red;
-      case "Approved" || "approved" || "submitted":
+      case "approved":
+      case "submitted":
         return Colors.green;
-      case "Completed" || "complete" || "completed" || "done":
+      case "completed":
+      case "complete":
+      case "done":
         return Colors.blue;
       default:
         return Colors.grey;

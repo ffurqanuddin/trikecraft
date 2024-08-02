@@ -74,18 +74,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingsListTileWidget(
                   title: "Feedback",
                   iconData: Icons.feedback,
-                  onTap: ()  {
-                    Navigator.pushNamed(context, AppRoutes.UserFeedbackPageRoute);
+                  onTap: () {
+                    Navigator.pushNamed(
+                        context, AppRoutes.UserFeedbackPageRoute);
                   },
-                ),
-
-                _divider(),
-
-                ///!-------------------Privacy Policy-----------------------------///
-                SettingsListTileWidget(
-                  title: "Privacy Policy",
-                  iconData: Icons.policy,
-                  onTap: () {},
                 ),
 
                 _divider(),
@@ -99,7 +91,9 @@ class _SettingsPageState extends State<SettingsPage> {
                 SettingsListTileWidget(
                     title: "About",
                     iconData: CupertinoIcons.info,
-                    onTap: () {}),
+                    onTap: () {
+                      Navigator.pushNamed(context, AppRoutes.aboutPageRoute);
+                    }),
 
                 _divider(),
 
@@ -160,5 +154,4 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   ///!------------ Feedback On Tap
-
 }

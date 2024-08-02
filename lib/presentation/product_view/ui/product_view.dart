@@ -6,6 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'package:gap/gap.dart';
+import 'package:injectable/injectable.dart';
+import 'package:trikecraft/base/routes/app_routes.dart';
 
 import '../../../base/assets/app_fonts.dart';
 import '../../../logic/theme/theme_cubit.dart';
@@ -97,24 +99,26 @@ class ProductViewPage extends StatelessWidget {
             ),
           ),
 
-
           ///--------------- Swipe To Buy Now
           Padding(
-                padding:
-                    EdgeInsets.symmetric(vertical: 15.sp, horizontal: 10.sp),
-                child: Center(
-                  child: SwipeButton.expand(
-                    thumb:
-                        Icon(Icons.double_arrow_rounded, color: Colors.white),
-                    child: Text("Swipe to Buy Now", style: TextStyle(color: Colors.black),),
-                    activeThumbColor: Theme.of(context).primaryColor,
-                    activeTrackColor: Colors.grey.shade300,
-                    onSwipe: () {
-                      print("Swiped");
-                    },
-                  ),
+            padding: EdgeInsets.symmetric(vertical: 15.sp, horizontal: 10.sp),
+            child: Center(
+              child: SwipeButton.expand(
+                thumb: Icon(Icons.double_arrow_rounded, color: Colors.white),
+                child: Text(
+                  "Swipe to Buy Now",
+                  style: TextStyle(color: Colors.black),
                 ),
+                activeThumbColor: Theme.of(context).primaryColor,
+                activeTrackColor: Colors.grey.shade300,
+                onSwipe: () {
+                  Navigator.pushNamed(
+                      context, AppRoutes.p2pPaymentPageRoute,
+                      arguments: bike);
+                },
               ),
+            ),
+          ),
           Gap(20.sp),
         ],
       ),
@@ -165,9 +169,10 @@ class ProductViewPage extends StatelessWidget {
       leading: BlocBuilder<ThemeCubit, ThemeState>(
         builder: (context, state) {
           return IconButton(
-              icon: Icon(CupertinoIcons.back, color:state.isDarkMode?Colors.white: Colors.black),
-              onPressed: () => Navigator.pop(context),
-            );
+            icon: Icon(CupertinoIcons.back,
+                color: state.isDarkMode ? Colors.white : Colors.black),
+            onPressed: () => Navigator.pop(context),
+          );
         },
       ),
       title: BlocBuilder<ThemeCubit, ThemeState>(

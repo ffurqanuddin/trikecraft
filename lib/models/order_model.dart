@@ -1,47 +1,38 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'bike_model.dart';
+import 'p2p_payment_model.dart';  // Import the P2P payment model
 
-class NewOrderModel {
+class NewBikeOrderModel {
   String orderId;
   String userName;
   String userEmail;
-  String contactInfo;
-  String address;
   BikeModel bike;
   DateTime orderDate;
   DateTime deliveryDate;
   String orderStatus;
-  double totalPrice;
-  String paymentMethod;
+  P2PPaymentModel paymentDetails;  // Add the P2P payment model as a property
 
-  NewOrderModel({
+  NewBikeOrderModel({
     required this.orderId,
     required this.userName,
     required this.userEmail,
-    required this.contactInfo,
-    required this.address,
     required this.bike,
     required this.orderDate,
     required this.deliveryDate,
     required this.orderStatus,
-    required this.totalPrice,
-    required this.paymentMethod,
+    required this.paymentDetails,
   });
 
-  factory NewOrderModel.fromFirestore(Map<String, dynamic> doc) {
-    return NewOrderModel(
+  factory NewBikeOrderModel.fromFirestore(Map<String, dynamic> doc) {
+    return NewBikeOrderModel(
       orderId: doc['orderId'] as String,
       userName: doc['userName'] as String,
       userEmail: doc['userEmail'] as String,
-      contactInfo: doc['contactInfo'] as String,
-      address: doc['address'] as String,
       bike: BikeModel.fromFirestore(doc['bike'] as Map<String, dynamic>),
       orderDate: (doc['orderDate'] as Timestamp).toDate(),
       deliveryDate: (doc['deliveryDate'] as Timestamp).toDate(),
       orderStatus: doc['orderStatus'] as String,
-      totalPrice: doc['totalPrice'] as double,
-      paymentMethod: doc['paymentMethod'] as String,
+      paymentDetails: P2PPaymentModel.fromFirestore(doc['paymentDetails'] as Map<String, dynamic>), // Parse the P2P payment details
     );
   }
 
@@ -50,14 +41,11 @@ class NewOrderModel {
       'orderId': orderId,
       'userName': userName,
       'userEmail': userEmail,
-      'contactInfo': contactInfo,
-      'address': address,
       'bike': bike.toFirestore(),
       'orderDate': orderDate,
       'deliveryDate': deliveryDate,
       'orderStatus': orderStatus,
-      'totalPrice': totalPrice,
-      'paymentMethod': paymentMethod,
+      'paymentDetails': paymentDetails.toFirestore(),  // Convert P2P payment details to Firestore format
     };
   }
 }

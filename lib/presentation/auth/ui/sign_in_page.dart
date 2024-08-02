@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -81,16 +82,11 @@ class _SignUpPageState extends State<SignInPage> {
             }
 
             if (state is AuthFailureState) {
-              showTopSnackBar(
-                Overlay.of(context),
-                CustomSnackBar.error(
-                  maxLines: 6,
-                  textStyle: TextStyle(
-                      fontSize: 13.sp,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500),
-                  message: state.errorMessage,
-                ),
+              Fluttertoast.showToast(
+                msg: state.errorMessage,
+                gravity: ToastGravity.BOTTOM,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
               );
             }
 

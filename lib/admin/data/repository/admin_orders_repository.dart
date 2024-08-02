@@ -26,11 +26,11 @@ class AdminOrdersRepository {
   }
 
   // Retrieve new bike order data as a stream
-  Stream<List<NewOrderModel>> getAllNewBikeOrderData() {
+  Stream<List<NewBikeOrderModel>> getAllNewBikeOrderData() {
     return adminOrdersProvider.getAllNewBikeOrderData().map(
       (snapshot) {
         return snapshot.docs
-            .map((doc) => NewOrderModel.fromFirestore(doc.data()))
+            .map((doc) => NewBikeOrderModel.fromFirestore(doc.data()))
             .toList();
       },
     ).handleError((error) {

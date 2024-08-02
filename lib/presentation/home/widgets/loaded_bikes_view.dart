@@ -40,7 +40,7 @@ class LoadedBikesView extends StatelessWidget {
                   Navigator.pushNamed(
                     context,
                     AppRoutes.productViewRoute,
-                    arguments: {"bikeFromAvailablePage": bike},
+                    arguments: bike
                   );
                 },
                 child: Padding(
