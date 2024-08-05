@@ -2,16 +2,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gap/gap.dart';
 import 'package:trikecraft/admin/constant/order_status.dart';
 import 'package:trikecraft/admin/logic/user_feedback/user_feedback_cubit.dart';
 import 'package:trikecraft/base/routes/app_routes.dart';
+import 'package:trikecraft/models/order_model.dart';
 import 'package:trikecraft/utils/snackbars.dart';
 
 import '../../../../logic/auth/auth_bloc.dart';
 import '../../../../models/customization_order_model.dart';
-import '../../../logic/admin_customizable_order/admin_customizable_orders_cubit.dart';
+import '../../../logic/admin_bike_order/admin_bike_orders_cubit.dart';
 
 class AdminDashboardPage extends StatefulWidget {
   const AdminDashboardPage({super.key});
@@ -20,15 +22,30 @@ class AdminDashboardPage extends StatefulWidget {
   State<AdminDashboardPage> createState() => _AdminDashboardPageState();
 }
 
-class _AdminDashboardPageState extends State<AdminDashboardPage> {
+class _AdminDashboardPageState extends State<AdminDashboardPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    context
-        .read<AdminCustomizableOrdersCubit>()
-        .listenToRealTimeCustomizedBikeOrder();
-    // context.read<AdminCubit>().listenToRealTimeNewBikeOrder();
+    _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(_handleTabSelection);
+
+    context.read<AdminBikeOrdersCubit>().listenToRealTimeOrders();
+  }
+
+  void _handleTabSelection() {
+    if (_tabController.indexIsChanging) {
+      // Call listenToRealTimeOrders when the tab changes
+      context.read<AdminBikeOrdersCubit>().listenToRealTimeOrders();
+    }
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
@@ -39,7 +56,6 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
         title: Text("Admin Dashboard"),
         backgroundColor: Colors.black,
         actions: [
-          ///!-------------------Logout-----------------------------///
           IconButton(
             onPressed: logOut,
             icon: Icon(
@@ -47,16 +63,10 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
               color: Colors.white,
             ),
           ),
-
-          ///!-------------------Refresh-----------------------------///
           IconButton(
             onPressed: () {
-              context
-                  .read<AdminCustomizableOrdersCubit>()
-                  .listenToRealTimeCustomizedBikeOrder();
+              context.read<AdminBikeOrdersCubit>().listenToRealTimeOrders();
               context.read<AdminUserFeedbackCubit>().getUsersFeedbacksList();
-
-              // context.read<AdminCubit>().listenToRealTimeNewBikeOrder();
             },
             icon: Icon(
               Icons.refresh,
@@ -65,40 +75,35 @@ class _AdminDashboardPageState extends State<AdminDashboardPage> {
           ),
         ],
       ),
-      body: BlocListener<AdminCustomizableOrdersCubit,
-          AdminCustomizableOrderState>(
+      body: BlocListener<AdminBikeOrdersCubit, AdminBikeOrderState>(
         listener: (context, adminState) {
           if (adminState is AdminFailureState) {
-            MySnackbars.showErrorSnackbar(context,
-                message: adminState.errorMessage);
+            Fluttertoast.showToast(
+              msg: adminState.errorMessage,
+              backgroundColor: Colors.red,
+            );
           }
         },
         child: Column(
           children: [
+            TabBar(
+              automaticIndicatorColorAdjustment: true,
+              controller: _tabController,
+              indicatorColor: Colors.white,
+              labelColor: Colors.white,
+              unselectedLabelColor: Colors.grey,
+              tabs: [
+                Tab(text: 'Customized Orders'),
+                Tab(text: 'New Orders'),
+              ],
+            ),
             Expanded(
-              child: DefaultTabController(
-                length: 2,
-                child: Column(
-                  children: [
-                    TabBar(
-                      indicatorColor: Colors.white,
-                      labelColor: Colors.white,
-                      unselectedLabelColor: Colors.grey,
-                      tabs: [
-                        Tab(text: 'Customized Orders'),
-                        Tab(text: 'New Orders'),
-                      ],
-                    ),
-                    Expanded(
-                      child: TabBarView(
-                        children: [
-                          CustomizedOrdersTab(),
-                          NewOrdersTab(),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  CustomizedOrdersTab(),
+                  NewOrdersTab(),
+                ],
               ),
             ),
             Divider(color: Colors.white),
@@ -172,7 +177,7 @@ class CustomizedOrdersTab extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16),
-          OrdersStatusGridViewWidget(isNewOrders: false),
+          CustomizedOrdersStatusGridViewWidget(),
         ],
       ),
     );
@@ -198,7 +203,7 @@ class NewOrdersTab extends StatelessWidget {
             ),
           ),
           SizedBox(height: 16),
-          OrdersStatusGridViewWidget(isNewOrders: true),
+          NewOrdersStatusGridViewWidget(),
         ],
       ),
     );
@@ -223,17 +228,12 @@ class OtherOptionsTab extends StatelessWidget {
         ),
         Gap(8),
         DashboardListTileWidget(
-          title: "Recommended Products",
-          icon: FontAwesomeIcons.motorcycle,
-          color: Colors.grey[900]!,
-          onTap: () {},
-        ),
-        Gap(8),
-        DashboardListTileWidget(
-          title: "All Products",
+          title: "Products",
           icon: FontAwesomeIcons.shop,
           color: Colors.grey[900]!,
-          onTap: () {},
+          onTap: () {
+             Navigator.pushNamed(context, AppRoutes.adminAddProductRoute);
+          },
         ),
         Gap(8),
         DashboardListTileWidget(
@@ -357,17 +357,14 @@ class GridBoxWidget extends StatelessWidget {
   }
 }
 
-class OrdersStatusGridViewWidget extends StatelessWidget {
-  OrdersStatusGridViewWidget({
+class CustomizedOrdersStatusGridViewWidget extends StatelessWidget {
+  CustomizedOrdersStatusGridViewWidget({
     super.key,
-    required this.isNewOrders,
   });
-  final bool isNewOrders;
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AdminCustomizableOrdersCubit,
-        AdminCustomizableOrderState>(
+    return BlocBuilder<AdminBikeOrdersCubit, AdminBikeOrderState>(
       builder: (context, adminState) {
         return Expanded(
           child: GridView(
@@ -380,105 +377,57 @@ class OrdersStatusGridViewWidget extends StatelessWidget {
             children: [
               //   -------------------- Customized Orders Grid Tile -----------------///
 
-              if (!isNewOrders)
-                if (adminState is AdminGetListCustomizedOrderState)
-                  AdminStreamGridBoxWidget(
-                    stream: adminState.OrdersList,
-                    gridTitle: "Pending",
-                    adminOrderStatus: AdminOrderStatus.pending,
-                    gridColor: Colors.grey[850]!,
-                    icon: FontAwesomeIcons.boxesStacked,
-                  ),
-              if (!isNewOrders)
-                if (adminState is AdminGetListCustomizedOrderState)
-                  AdminStreamGridBoxWidget(
-                    stream: adminState.OrdersList,
-                    gridTitle: "Reviewing",
-                    adminOrderStatus: AdminOrderStatus.reviewing,
-                    gridColor: Colors.grey[800]!,
-                    icon: FontAwesomeIcons.eye,
-                  ),
-
-              if (!isNewOrders)
-                if (adminState is AdminGetListCustomizedOrderState)
-                  AdminStreamGridBoxWidget(
-                    stream: adminState.OrdersList,
-                    gridTitle: "Approved",
-                    adminOrderStatus: AdminOrderStatus.approved,
-                    gridColor: Colors.grey[700]!,
-                    icon: FontAwesomeIcons.check,
-                  ),
-              if (!isNewOrders)
-                if (adminState is AdminGetListCustomizedOrderState)
-                  AdminStreamGridBoxWidget(
-                    stream: adminState.OrdersList,
-                    gridTitle: "Rejected",
-                    adminOrderStatus: AdminOrderStatus.rejected,
-                    gridColor: Colors.grey[600]!,
-                    icon: Icons.close,
-                  ),
-
-              if (!isNewOrders)
-                if (adminState is AdminGetListCustomizedOrderState)
-                  AdminStreamGridBoxWidget(
-                    stream: adminState.OrdersList,
-                    gridTitle: "RFD",
-                    adminOrderStatus: AdminOrderStatus.rfd,
-                    gridColor: Colors.grey[600]!,
-                    icon: FontAwesomeIcons.truck,
-                  ),
-              if (!isNewOrders)
-                if (adminState is AdminGetListCustomizedOrderState)
-                  AdminStreamGridBoxWidget(
-                    stream: adminState.OrdersList,
-                    gridTitle: "Completed",
-                    adminOrderStatus: AdminOrderStatus.completed,
-                    gridColor: Colors.grey[400]!,
-                    icon: Icons.done_all,
-                  ),
-
-              //   -------------------- New Orders Grid Tile -----------------///
-              if (isNewOrders)
-                GridBoxWidget(
-                  title: "Pending",
-                  iconData: FontAwesomeIcons.boxesStacked,
-                  boxColor: Colors.grey[850]!,
-                  itemsCount: "0",
+              if (adminState is AdminGetCombinedOrdersState)
+                CustomizedAdminStreamGridBoxWidget(
+                  stream: adminState.customizedOrders,
+                  gridTitle: "Pending",
+                  adminOrderStatus: AdminOrderStatus.pending,
+                  gridColor: Colors.grey[850]!,
+                  icon: FontAwesomeIcons.boxesStacked,
                 ),
-              if (isNewOrders)
-                GridBoxWidget(
-                  title: "Reviewing",
-                  iconData: FontAwesomeIcons.boxesStacked,
-                  boxColor: Colors.grey[850]!,
-                  itemsCount: "0",
-                ),
-              if (isNewOrders)
-                GridBoxWidget(
-                  title: "Approved",
-                  iconData: Icons.check,
-                  boxColor: Colors.grey[700]!,
-                  itemsCount: "0",
-                ),
-              if (isNewOrders)
-                GridBoxWidget(
-                  title: "Rejected",
-                  iconData: Icons.close,
-                  boxColor: Colors.grey[600]!,
-                  itemsCount: "0",
+              if (adminState is AdminGetCombinedOrdersState)
+                CustomizedAdminStreamGridBoxWidget(
+                  stream: adminState.customizedOrders,
+                  gridTitle: "Reviewing",
+                  adminOrderStatus: AdminOrderStatus.reviewing,
+                  gridColor: Colors.grey[800]!,
+                  icon: FontAwesomeIcons.eye,
                 ),
 
-              if (isNewOrders)
-                GridBoxWidget(
-                    title: "RFD",
-                    iconData: FontAwesomeIcons.truck,
-                    boxColor: Colors.grey[500]!,
-                    itemsCount: "0"),
-              if (isNewOrders)
-                GridBoxWidget(
-                    title: "Completed",
-                    iconData: Icons.done_all,
-                    boxColor: Colors.grey[400]!,
-                    itemsCount: "0"),
+              if (adminState is AdminGetCombinedOrdersState)
+                CustomizedAdminStreamGridBoxWidget(
+                  stream: adminState.customizedOrders,
+                  gridTitle: "Approved",
+                  adminOrderStatus: AdminOrderStatus.approved,
+                  gridColor: Colors.grey[700]!,
+                  icon: FontAwesomeIcons.check,
+                ),
+              if (adminState is AdminGetCombinedOrdersState)
+                CustomizedAdminStreamGridBoxWidget(
+                  stream: adminState.customizedOrders,
+                  gridTitle: "Rejected",
+                  adminOrderStatus: AdminOrderStatus.rejected,
+                  gridColor: Colors.grey[600]!,
+                  icon: Icons.close,
+                ),
+
+              if (adminState is AdminGetCombinedOrdersState)
+                CustomizedAdminStreamGridBoxWidget(
+                  stream: adminState.customizedOrders,
+                  gridTitle: "RFD",
+                  adminOrderStatus: AdminOrderStatus.rfd,
+                  gridColor: Colors.grey[600]!,
+                  icon: FontAwesomeIcons.truck,
+                ),
+              if (adminState is AdminGetCombinedOrdersState)
+                CustomizedAdminStreamGridBoxWidget(
+                  stream: adminState.customizedOrders,
+                  gridTitle: "Completed",
+                  adminOrderStatus: AdminOrderStatus.completed,
+                  gridColor: Colors.grey[400]!,
+                  icon: Icons.done_all,
+                ),
+
               //   -------------------- Loading Grid Tile -----------------///
               if (adminState is AdminLoadingState) AdminLoadingGridTileWidget(),
               if (adminState is AdminLoadingState) AdminLoadingGridTileWidget(),
@@ -494,16 +443,102 @@ class OrdersStatusGridViewWidget extends StatelessWidget {
   }
 }
 
-class AdminStreamGridBoxWidget extends StatelessWidget {
-  AdminStreamGridBoxWidget(
-      {super.key,
-      required this.stream,
-      required this.gridTitle,
-      // required this.count,
-      required this.gridColor,
-      required this.icon,
-      required this.adminOrderStatus});
+class NewOrdersStatusGridViewWidget extends StatelessWidget {
+  NewOrdersStatusGridViewWidget({
+    super.key,
+  });
 
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<AdminBikeOrdersCubit, AdminBikeOrderState>(
+      builder: (context, adminState) {
+        return Expanded(
+          child: GridView(
+            padding: EdgeInsets.all(8),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+            ),
+            children: [
+              //   -------------------- New Orders Grid Tile -----------------///
+
+              if (adminState is AdminGetCombinedOrdersState)
+                NewAdminStreamGridBoxWidget(
+                  stream: adminState.newOrders,
+                  gridTitle: "Pending",
+                  adminOrderStatus: AdminOrderStatus.pending,
+                  gridColor: Colors.grey[850]!,
+                  icon: FontAwesomeIcons.boxesStacked,
+                ),
+              if (adminState is AdminGetCombinedOrdersState)
+                NewAdminStreamGridBoxWidget(
+                  stream: adminState.newOrders,
+                  gridTitle: "Reviewing",
+                  adminOrderStatus: AdminOrderStatus.reviewing,
+                  gridColor: Colors.grey[800]!,
+                  icon: FontAwesomeIcons.eye,
+                ),
+
+              if (adminState is AdminGetCombinedOrdersState)
+                NewAdminStreamGridBoxWidget(
+                  stream: adminState.newOrders,
+                  gridTitle: "Approved",
+                  adminOrderStatus: AdminOrderStatus.approved,
+                  gridColor: Colors.grey[700]!,
+                  icon: FontAwesomeIcons.check,
+                ),
+              if (adminState is AdminGetCombinedOrdersState)
+                NewAdminStreamGridBoxWidget(
+                  stream: adminState.newOrders,
+                  gridTitle: "Rejected",
+                  adminOrderStatus: AdminOrderStatus.rejected,
+                  gridColor: Colors.grey[600]!,
+                  icon: Icons.close,
+                ),
+
+              if (adminState is AdminGetCombinedOrdersState)
+                NewAdminStreamGridBoxWidget(
+                  stream: adminState.newOrders,
+                  gridTitle: "RFD",
+                  adminOrderStatus: AdminOrderStatus.rfd,
+                  gridColor: Colors.grey[600]!,
+                  icon: FontAwesomeIcons.truck,
+                ),
+              if (adminState is AdminGetCombinedOrdersState)
+                NewAdminStreamGridBoxWidget(
+                  stream: adminState.newOrders,
+                  gridTitle: "Completed",
+                  adminOrderStatus: AdminOrderStatus.completed,
+                  gridColor: Colors.grey[400]!,
+                  icon: Icons.done_all,
+                ),
+
+              //   -------------------- Loading Grid Tile -----------------///
+              if (adminState is AdminLoadingState) AdminLoadingGridTileWidget(),
+              if (adminState is AdminLoadingState) AdminLoadingGridTileWidget(),
+              if (adminState is AdminLoadingState) AdminLoadingGridTileWidget(),
+              if (adminState is AdminLoadingState) AdminLoadingGridTileWidget(),
+              if (adminState is AdminLoadingState) AdminLoadingGridTileWidget(),
+              if (adminState is AdminLoadingState) AdminLoadingGridTileWidget(),
+            ],
+          ),
+        );
+      },
+    );
+  }
+}
+
+class CustomizedAdminStreamGridBoxWidget extends StatelessWidget {
+  CustomizedAdminStreamGridBoxWidget({
+    super.key,
+    required this.stream,
+    required this.gridTitle,
+    // required this.count,
+    required this.gridColor,
+    required this.icon,
+    required this.adminOrderStatus,
+  });
   Stream<List<CustomizationOrderModel>> stream;
   String gridTitle;
   Color gridColor;
@@ -520,7 +555,9 @@ class AdminStreamGridBoxWidget extends StatelessWidget {
               if (snapshot.hasData) {
                 int ordersCount = snapshot.data!
                     .where(
-                      (element) => element.orderStatus == adminOrderStatus,
+                      (element) =>
+                          element.orderStatus.toLowerCase() ==
+                          adminOrderStatus.toLowerCase(),
                     )
                     .toList()
                     .length;
@@ -535,6 +572,115 @@ class AdminStreamGridBoxWidget extends StatelessWidget {
                     Navigator.pushNamed(
                         context, AppRoutes.adminCustomizedBikesOrderPreviewPage,
                         arguments: ordersList);
+                  },
+                  child: Container(
+                    padding: EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: gridColor,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          gridTitle,
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          softWrap: true,
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            fontSize: 15.sp,
+                          ),
+                        ),
+                        SizedBox(height: 4.sp),
+                        Icon(
+                          icon,
+                          color: Colors.white,
+                          size: 20.sp,
+                        ),
+                        SizedBox(height: 4.sp),
+                        Container(
+                          padding: EdgeInsets.all(8.sp),
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.6),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            ordersCount.toString(),
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              } else {
+                return Container(
+                  child: Center(child: Text("Nope")),
+                );
+              }
+            case ConnectionState.waiting:
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            case ConnectionState.none:
+              return Center(
+                child: Text("No Connection"),
+              );
+          }
+        });
+  }
+}
+
+class NewAdminStreamGridBoxWidget extends StatelessWidget {
+  NewAdminStreamGridBoxWidget({
+    super.key,
+    required this.stream,
+    required this.gridTitle,
+    required this.gridColor,
+    required this.icon,
+    required this.adminOrderStatus,
+  });
+  Stream<List<NewBikeOrderModel>> stream;
+  String gridTitle;
+  Color gridColor;
+  IconData icon;
+  String adminOrderStatus;
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+        stream: stream,
+        builder: (context, snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.active:
+            case ConnectionState.done:
+              if (snapshot.hasData) {
+                int ordersCount = snapshot.data!
+                    .where(
+                      (element) =>
+                          element.orderStatus.toLowerCase() ==
+                          adminOrderStatus.toLowerCase(),
+                    )
+                    .toList()
+                    .length;
+                List<NewBikeOrderModel> ordersList = snapshot.data!
+                    .where(
+                      (element) => element.orderStatus.toLowerCase() == adminOrderStatus.toLowerCase(),
+                    )
+                    .toList();
+
+                return InkWell(
+                  onTap: () {
+                    Navigator.pushNamed(
+                        context, AppRoutes.adminNewBikesOrderPreviewPage,
+                        arguments:
+                         ordersList
+                        );
                   },
                   child: Container(
                     padding: EdgeInsets.all(8),

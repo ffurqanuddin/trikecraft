@@ -59,6 +59,19 @@ class AdminOrdersRepository {
     }
   }
 
+   Future<void> updateNewBikeOrder({
+    required String orderId,
+    required Map<String, dynamic> data,
+  }) async {
+    try {
+      await adminOrdersProvider.updateNewBikeOrder(
+          orderId: orderId, data: data);
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
+
+
   Future<List<UserFeedbackModel>> getUsersFeedbacksList() async {
     try {
       QuerySnapshot<Map<String, dynamic>> feedbacks =

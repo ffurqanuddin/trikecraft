@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:trikecraft/admin/presentation/customized_orders_preview/ui/admin_customized_order_preview.dart';
 import 'package:trikecraft/admin/presentation/feedbacks/ui/admin_user_feebacks_page.dart';
+import 'package:trikecraft/admin/presentation/products/ui/admin_add_new_product_page.dart';
+import 'package:trikecraft/admin/presentation/products/ui/admin_products_page.dart';
 import 'package:trikecraft/admin/presentation/users_profile/ui/users_profile_page.dart';
 import 'package:trikecraft/base/routes/app_routes.dart';
 import 'package:trikecraft/models/bike_model.dart';
@@ -20,6 +22,7 @@ import 'package:trikecraft/presentation/setting/ui/settings_page.dart';
 import 'package:trikecraft/presentation/splash/ui/splash_page.dart';
 import 'package:trikecraft/presentation/user_profile/ui/profile_page.dart';
 
+import '../../admin/presentation/new_orders_preview/ui/admin_new_bikes_orders_preview_page.dart';
 import '../../presentation/auth/ui/sign_in_page.dart';
 import '../../presentation/auth/ui/sign_up_page.dart';
 import '../../presentation/home/ui/home_page.dart';
@@ -84,6 +87,15 @@ class AppRouter {
           ),
         );
 
+         case AppRoutes.adminNewBikesOrderPreviewPage:
+        var arguments = settings.arguments as List<NewBikeOrderModel>;
+
+        return MaterialPageRoute(
+          builder: (_) => AdminNewBikesOrderPreviewPage(
+            ordersList: arguments,
+          ),
+        );
+
       case AppRoutes.easypaisaPaymentPageRoute:
         var argument = settings.arguments as BikeModel;
 
@@ -113,6 +125,12 @@ class AppRouter {
 
       case AppRoutes.UserFeedbackPageRoute:
         return MaterialPageRoute(builder: (_) => UserFeedbackPage());
+
+          case AppRoutes.adminAddProductRoute:
+        return MaterialPageRoute(builder: (_) => AdminProductsPage());
+
+          case AppRoutes.adminAddProductRoute:
+        return MaterialPageRoute(builder: (_) => AdminAddNewProductPage());
       case AppRoutes.searchProductsPageRoute:
         return MaterialPageRoute(builder: (_) => SearchProductsPage());
       default:

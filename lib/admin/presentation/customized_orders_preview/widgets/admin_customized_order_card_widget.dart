@@ -1,4 +1,3 @@
-
 import 'package:animate_do/animate_do.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -8,7 +7,7 @@ import 'package:flutter_swipe_button/flutter_swipe_button.dart';
 import 'package:gap/gap.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:trikecraft/admin/constant/order_status.dart';
-import 'package:trikecraft/admin/logic/admin_customizable_order/admin_customizable_orders_cubit.dart';
+import 'package:trikecraft/admin/logic/admin_bike_order/admin_bike_orders_cubit.dart';
 import 'package:trikecraft/base/assets/app_fonts.dart';
 import 'package:trikecraft/logic/customized_bike_order/customized_bike_order_bloc.dart';
 import 'package:trikecraft/models/customization_order_model.dart';
@@ -59,8 +58,7 @@ class _AdminCustomizedOrderCardWidgetState
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<AdminCustomizableOrdersCubit,
-        AdminCustomizableOrderState>(
+    return BlocListener<AdminBikeOrdersCubit, AdminBikeOrderState>(
       listener: (context, state) {
         if (state is AdminOrderDataIsSuccessfullyUpdatedState) {
           MySnackbars.showSimpleSnackbar(context,
@@ -207,7 +205,7 @@ class _AdminCustomizedOrderCardWidgetState
                                     const Color.fromARGB(255, 0, 0, 0),
                                 onSwipe: () {
                                   context
-                                      .read<AdminCustomizableOrdersCubit>()
+                                      .read<AdminBikeOrdersCubit>()
                                       .updateCustomizedBikeOrder(
                                           orderId: widget.order.orderId,
                                           data: {
@@ -220,8 +218,9 @@ class _AdminCustomizedOrderCardWidgetState
                             ),
 
                           if (widget.order.orderStatus !=
-                              AdminOrderStatus.pending && widget.order.orderStatus !=
-                              AdminOrderStatus.completed)
+                                  AdminOrderStatus.pending &&
+                              widget.order.orderStatus !=
+                                  AdminOrderStatus.completed)
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
@@ -235,8 +234,9 @@ class _AdminCustomizedOrderCardWidgetState
 
                           //---------Order Status ---------------//
                           if (widget.order.orderStatus !=
-                              AdminOrderStatus.pending && widget.order.orderStatus !=
-                              AdminOrderStatus.completed)
+                                  AdminOrderStatus.pending &&
+                              widget.order.orderStatus !=
+                                  AdminOrderStatus.completed)
                             _buildExpansionTile(
                               context: context,
                               title: "Order Status",
@@ -251,8 +251,9 @@ class _AdminCustomizedOrderCardWidgetState
 
                           ///--------Change Order Total Price ------///
                           if (widget.order.orderStatus !=
-                              AdminOrderStatus.pending && widget.order.orderStatus !=
-                              AdminOrderStatus.completed)
+                                  AdminOrderStatus.pending &&
+                              widget.order.orderStatus !=
+                                  AdminOrderStatus.completed)
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
@@ -265,8 +266,9 @@ class _AdminCustomizedOrderCardWidgetState
                             ),
                           Gap(5),
                           if (widget.order.orderStatus !=
-                              AdminOrderStatus.pending && widget.order.orderStatus !=
-                              AdminOrderStatus.completed)
+                                  AdminOrderStatus.pending &&
+                              widget.order.orderStatus !=
+                                  AdminOrderStatus.completed)
                             TextField(
                               controller: priceController,
                               keyboardType: TextInputType.number,
@@ -282,8 +284,9 @@ class _AdminCustomizedOrderCardWidgetState
 
                           ///--------Update Order Additional Details ------///
                           if (widget.order.orderStatus !=
-                              AdminOrderStatus.pending && widget.order.orderStatus !=
-                              AdminOrderStatus.completed)
+                                  AdminOrderStatus.pending &&
+                              widget.order.orderStatus !=
+                                  AdminOrderStatus.completed)
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
@@ -296,8 +299,9 @@ class _AdminCustomizedOrderCardWidgetState
                             ),
                           Gap(5),
                           if (widget.order.orderStatus !=
-                              AdminOrderStatus.pending && widget.order.orderStatus !=
-                              AdminOrderStatus.completed)
+                                  AdminOrderStatus.pending &&
+                              widget.order.orderStatus !=
+                                  AdminOrderStatus.completed)
                             TextField(
                               controller: extraDetailController,
                               maxLines: 6,
@@ -310,8 +314,9 @@ class _AdminCustomizedOrderCardWidgetState
                             ),
                           Gap(10),
                           if (widget.order.orderStatus !=
-                              AdminOrderStatus.pending && widget.order.orderStatus !=
-                              AdminOrderStatus.completed)
+                                  AdminOrderStatus.pending &&
+                              widget.order.orderStatus !=
+                                  AdminOrderStatus.completed)
                             Center(
                               child: ElevatedButton.icon(
                                   style: ElevatedButton.styleFrom(
@@ -337,16 +342,16 @@ class _AdminCustomizedOrderCardWidgetState
   ///-----------------  Methods ----------------////
   void _updateButtonOnTap(BuildContext context) {
     if (orderStatus.isNotEmpty) {
-      context.read<AdminCustomizableOrdersCubit>().updateCustomizedBikeOrder(
+      context.read<AdminBikeOrdersCubit>().updateCustomizedBikeOrder(
           orderId: widget.order.orderId, data: {"orderStatus": orderStatus});
     }
     if (priceController.text.isNotEmpty) {
-      context.read<AdminCustomizableOrdersCubit>().updateCustomizedBikeOrder(
+      context.read<AdminBikeOrdersCubit>().updateCustomizedBikeOrder(
           orderId: widget.order.orderId,
           data: {"totalPrice": priceController.text});
     }
-    if(extraDetailController.text.isNotEmpty){
-      context.read<AdminCustomizableOrdersCubit>().updateCustomizedBikeOrder(
+    if (extraDetailController.text.isNotEmpty) {
+      context.read<AdminBikeOrdersCubit>().updateCustomizedBikeOrder(
           orderId: widget.order.orderId,
           data: {"extraDetail": extraDetailController.text});
     }

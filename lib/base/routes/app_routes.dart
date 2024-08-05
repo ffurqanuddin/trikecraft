@@ -27,5 +27,12 @@ class AppRoutes {
   static const String adminCustomizedBikesOrderPreviewPage =
       "/admin_customized_bikes_order_preview";
 
+        static const String adminNewBikesOrderPreviewPage =
+      "/admin_new_bikes_order_preview";
+
   static const String forgotPasswordRoute = '/forgot_password';
+  static const String adminProductsRoute = '/admin_products';
+  static const String adminAddProductRoute = '/admin_add_product';
+
+
 }

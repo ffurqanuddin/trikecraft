@@ -3,22 +3,24 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AdminOrdersProvider {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   static const String customizedBikeOrder = "CustomizedBikeOrders";
   static const String newBikeOrder = "NewBikeOrders";
   static const String userFeedbacks = "feedbacks";
   static const String users = "Users";
 
-
-  // Get Bike order data from Firestore
+  // Get Bike order data from Firestore in descending order
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllCustomizedBikeOrderData() {
-    return _firestore.collection(customizedBikeOrder).snapshots();
+    return _firestore.collection(customizedBikeOrder)
+      .orderBy('orderDate', descending: true)
+      .snapshots();
   }
 
-  // Get Bike order data from Firestore
+  // Get New Bike order data from Firestore in descending order
   Stream<QuerySnapshot<Map<String, dynamic>>> getAllNewBikeOrderData() {
-    return _firestore.collection(newBikeOrder).snapshots();
+    return _firestore.collection(newBikeOrder)
+      .orderBy('orderDate', descending: true)
+      .snapshots();
   }
 
   // Cancel Bike order data from Firestore
@@ -31,17 +33,28 @@ class AdminOrdersProvider {
     required Map<String, dynamic> data,
   }) async {
     await _firestore
-        .collection('CustomizedBikeOrders')
+        .collection(customizedBikeOrder)
+        .doc(orderId)
+        .update(data);
+  }
+
+  Future<void> updateNewBikeOrder({
+    required String orderId,
+    required Map<String, dynamic> data,
+  }) async {
+    await _firestore
+        .collection(newBikeOrder)
         .doc(orderId)
         .update(data);
   }
 
   Future<QuerySnapshot<Map<String, dynamic>>> getUsersFeedbacksList() async {
-    return await _firestore.collection(userFeedbacks).get();
+    return await _firestore.collection(userFeedbacks).orderBy('date', descending: true).get();
   }
 
-
   Future<QuerySnapshot<Map<String, dynamic>>> getUsersDataList() async {
-    return await _firestore.collection(users).get();
+    return await _firestore.collection(users)
+      .orderBy('fullName') // Sort by the 'fullName' field in ascending order
+      .get();
   }
 }

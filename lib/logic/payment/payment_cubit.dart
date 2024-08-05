@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:easypaisa_flutter/easypaisa_flutter.dart';
 import 'package:equatable/equatable.dart';
@@ -69,6 +68,9 @@ class PaymentCubit extends Cubit<PaymentState> {
 
   Future<void> payWithP2P(BuildContext context) async {
     emit(PaymentLoadingState());
+    await _genOrderId();
+    await _getUserName;
+    await _getUserEmail;
 
     try {
       P2PPaymentModel p2pModel = P2PPaymentModel(
@@ -93,7 +95,9 @@ class PaymentCubit extends Cubit<PaymentState> {
         paymentDetails: p2pModel,
       );
 
-      context.read<NewBikeOrderBloc>().add(SaveNewBikeOrderDataEvent(newOrderModel: order));
+      context
+          .read<NewBikeOrderBloc>()
+          .add(SaveNewBikeOrderDataEvent(newOrderModel: order));
 
       emit(PaymentSuccessState());
     } catch (e) {
@@ -102,7 +106,8 @@ class PaymentCubit extends Cubit<PaymentState> {
   }
 
   Future<String> _genOrderId() async {
-    String email = await MyHiveBoxes.settingBox.get(MyHiveKeys.userEmailHiveKey);
+    String email =
+        await MyHiveBoxes.settingBox.get(MyHiveKeys.userEmailHiveKey);
     return generateOrderId(email);
   }
 

@@ -80,7 +80,7 @@ class AboutPage extends StatelessWidget {
               // GitHub Button
               FadeInRight(
                 child: Link(
-                  uri: Uri.parse("https://github.com/ffurqanuddin/trikecraft"),
+                  uri: Uri.parse("https://github.com/"),
                   target: LinkTarget.blank,
                   builder: (context, followLink) => TextButton(
                     onPressed: followLink,
@@ -197,22 +197,22 @@ class AboutPage extends StatelessWidget {
                   children: [
                     // LinkedIn Button
                     SocialMediaIconButton(
-                        url: "https://www.linkedin.com/in/",
+                        url: "https://www.linkedin.com/in/ghulam-mustafa-765174291",
                         icon: FontAwesomeIcons.linkedin),
 
                     // Instagram Button
                     SocialMediaIconButton(
-                        url: "https://www.instagram.com/",
+                        url: "https://www.instagram.com/dilwale7457",
                         icon: FontAwesomeIcons.instagram),
 
                     // Twitter Button
                     SocialMediaIconButton(
-                        url: "https://www.twitter.com/",
+                        url: "https://www.twitter.com/GMustafa4050",
                         icon: FontAwesomeIcons.twitter),
 
                     // Threads Button
                     SocialMediaIconButton(
-                        url: "https://www.threads.net/",
+                        url: "https://www.threads.net/dilwale7457",
                         icon: FontAwesomeIcons.threads),
                   ],
                 ),

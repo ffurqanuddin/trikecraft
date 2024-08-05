@@ -5,7 +5,7 @@ import 'package:trikecraft/base/assets/app_fonts.dart';
 import 'package:trikecraft/utils/date_time_format.dart';
 
 import '../../../../models/feedback_model.dart';
-import '../../../logic/admin_customizable_order/admin_customizable_orders_cubit.dart';
+import '../../../logic/admin_bike_order/admin_bike_orders_cubit.dart';
 
 class AdminUserFeedbacksPage extends StatelessWidget {
   @override
@@ -22,62 +22,76 @@ class AdminUserFeedbacksPage extends StatelessWidget {
           } else if (state is AdminGetUserFeedbacksSuccessState) {
             return Padding(
               padding: const EdgeInsets.all(8.0),
-              child: ListView.builder(
-                itemCount: state.feedbacksList.length,
-                itemBuilder: (context, index) {
-                  UserFeedbackModel feedback = state.feedbacksList[index];
-                  return Card(
-                    margin: EdgeInsets.symmetric(vertical: 10),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15),
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                      child: Text(
+                          "Total Feedbacks : ${state.feedbacksList.length}"),
                     ),
-                    elevation: 5,
-                    child: ListTile(
-                      contentPadding: EdgeInsets.all(15),
-                      leading: CircleAvatar(
-                        radius: 30,
-                        backgroundImage: NetworkImage(feedback.userPic),
-                      ),
-                      title: Text(
-                        feedback.title,
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
-                      ),
-                      subtitle: Padding(
-                        padding: const EdgeInsets.only(top: 5),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              feedback.message,
-                              style: TextStyle(fontFamily: AppFonts.poppins),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: state.feedbacksList.length,
+                      itemBuilder: (context, index) {
+                        UserFeedbackModel feedback = state.feedbacksList[index];
+                        return Card(
+                          margin: EdgeInsets.symmetric(vertical: 10),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          elevation: 5,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.all(15),
+                            leading: CircleAvatar(
+                              radius: 30,
+                              backgroundImage: NetworkImage(feedback.userPic),
                             ),
-                            SizedBox(height: 10),
-                            Text(
-                              feedback.userEmail,
+                            title: Text(
+                              feedback.title,
                               style: TextStyle(
-                                fontSize: 12,
-                                fontStyle: FontStyle.italic,
-                                color: Colors.grey[600],
+                                fontWeight: FontWeight.bold,
+                                fontSize: 18,
                               ),
                             ),
-                            SizedBox(height: 10),
-                            Text(
-                              MyDateTimeFormatter.fTD(feedback.date),
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontStyle: FontStyle.italic,
-                                color: Colors.grey[600],
+                            subtitle: Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    feedback.message,
+                                    style:
+                                        TextStyle(fontFamily: AppFonts.poppins),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    feedback.userEmail,
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontStyle: FontStyle.italic,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                  SizedBox(height: 10),
+                                  Text(
+                                    MyDateTimeFormatter.fTD(feedback.date),
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      fontStyle: FontStyle.italic,
+                                      color: Colors.grey[600],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+                ],
               ),
             );
           } else if (state is AdminGetUserFeedbacksFailureState) {

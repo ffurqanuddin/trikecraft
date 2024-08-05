@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:trikecraft/base/assets/app_fonts.dart';
 import 'package:trikecraft/base/assets/app_images.dart';
 
 import '../../../logic/admin_users_data/admin_users_data_cubit.dart';
@@ -46,37 +47,57 @@ class _AdminUsersProfilePageState extends State<AdminUsersProfilePage> {
             } else if (state is AdminUsersProfileDataLoadedState) {
               final usersList = state.usersList;
 
-              return ListView.builder(
-                itemCount: usersList.length,
-                itemBuilder: (context, index) {
-                  final user = usersList[index];
-                  return FadeInUp(
-                    delay: Duration(milliseconds: 100 * index),
-                    child: Card(
-                      margin:
-                          EdgeInsets.symmetric(vertical: 5.sp, horizontal: 5.sp),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(15.r),
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Center(
+                        child: Text(
+                      "Total Users : ${state.usersList.length}",
+                      style: TextStyle(
+                        fontFamily: AppFonts.poppins,
+                        fontWeight: FontWeight.w500,
                       ),
-                      child: ListTile(
-                        contentPadding: EdgeInsets.all(10.w),
-                        leading: CircleAvatar(
-                          radius: 30.r,
-                          backgroundImage:
-                             user.profilePicture.isNotEmpty? CachedNetworkImageProvider(user.profilePicture,):AssetImage(AppImages.neonLandscape),
-                        ),
-                        title: Text(
-                          user.fullName,
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.sp,
+                    )),
+                  ),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: usersList.length,
+                      itemBuilder: (context, index) {
+                        final user = usersList[index];
+                        return FadeInUp(
+                          delay: Duration(milliseconds: 100 * index),
+                          child: Card(
+                            margin: EdgeInsets.symmetric(
+                                vertical: 5.sp, horizontal: 5.sp),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.r),
+                            ),
+                            child: ListTile(
+                              contentPadding: EdgeInsets.all(10.w),
+                              leading: CircleAvatar(
+                                radius: 30.r,
+                                backgroundImage: user.profilePicture.isNotEmpty
+                                    ? CachedNetworkImageProvider(
+                                        user.profilePicture,
+                                      )
+                                    : AssetImage(AppImages.neonLandscape),
+                              ),
+                              title: Text(
+                                user.fullName,
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18.sp,
+                                ),
+                              ),
+                              subtitle: Text(user.email),
+                            ),
                           ),
-                        ),
-                        subtitle: Text(user.email),
-                      ),
+                        );
+                      },
                     ),
-                  );
-                },
+                  ),
+                ],
               );
             }
             return const Center(child: Text('No users available.'));

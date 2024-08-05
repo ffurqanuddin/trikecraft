@@ -282,7 +282,7 @@ class _P2PPaymentPageState extends State<P2PPaymentPage> {
                   ),
                   SizedBox(height: 30),
 
-//loading
+                  //loading
                   if (pState is PaymentLoadingState)
                     Center(
                         child: SizedBox(
@@ -310,14 +310,11 @@ class _P2PPaymentPageState extends State<P2PPaymentPage> {
                                 content: Text(
                                     'Are you sure you want to confirm this payment?'),
                                 actions: [
-                                  TextButton(
+                                  ElevatedButton(
                                     onPressed: () {
-                                      Navigator.of(context).pop();
+                                      Navigator.pop(context);
                                     },
-                                    child: Text('Cancel'),
-                                    style: TextButton.styleFrom(
-                                      backgroundColor: theme.primaryColor,
-                                    ),
+                                    child: Text("Cancel"),
                                   ),
                                   ElevatedButton(
                                     // In the onPressed of the Confirm button
@@ -342,8 +339,8 @@ class _P2PPaymentPageState extends State<P2PPaymentPage> {
                                             accountName: accountNameController
                                                 .text
                                                 .trim(),
-                                            amount: 
-                                            amountController.text.trim(),
+                                            amount:
+                                                amountController.text.trim(),
                                             bike: widget.bike,
                                           );
                                       context
