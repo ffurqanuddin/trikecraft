@@ -126,10 +126,10 @@ class AppRouter {
       case AppRoutes.UserFeedbackPageRoute:
         return MaterialPageRoute(builder: (_) => UserFeedbackPage());
 
-          case AppRoutes.adminAddProductRoute:
+          case AppRoutes.adminProductsRoute:
         return MaterialPageRoute(builder: (_) => AdminProductsPage());
 
-          case AppRoutes.adminAddProductRoute:
+          case AppRoutes.adminAddNewProductRoute:
         return MaterialPageRoute(builder: (_) => AdminAddNewProductPage());
       case AppRoutes.searchProductsPageRoute:
         return MaterialPageRoute(builder: (_) => SearchProductsPage());

@@ -1,7 +1,9 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:get_it/get_it.dart';
 import 'package:trikecraft/admin/data/providers/admin_orders_providers.dart';
+import 'package:trikecraft/admin/data/providers/admin_products_provider.dart';
 import 'package:trikecraft/admin/data/repository/admin_orders_repository.dart';
+import 'package:trikecraft/admin/data/repository/admin_products_repository.dart';
 import 'package:trikecraft/data/providers/bikes_data_provider.dart';
 import 'package:trikecraft/data/providers/change_user_profile_data_provider.dart';
 import 'package:trikecraft/data/providers/firebase_auth_providers.dart';
@@ -71,11 +73,16 @@ void getItSetup() {
   getIt.registerLazySingleton<AdminOrdersRepository>(() =>
       AdminOrdersRepository(adminOrdersProvider: getIt<AdminOrdersProvider>()));
 
+  getIt.registerLazySingleton<ChangeUserProfileDataProvider>(
+      () => ChangeUserProfileDataProvider());
 
-  getIt.registerLazySingleton<ChangeUserProfileDataProvider>(() =>
-      ChangeUserProfileDataProvider());
+  getIt.registerLazySingleton<ChangeUserProfileDataRepository>(() =>
+      ChangeUserProfileDataRepository(
+          profileDataProvider: getIt<ChangeUserProfileDataProvider>()));
 
-        getIt.registerLazySingleton<ChangeUserProfileDataRepository>(() =>
-      ChangeUserProfileDataRepository(profileDataProvider: getIt<ChangeUserProfileDataProvider>()));
-
+  getIt.registerLazySingleton<AdminProductsProvider>(
+      () => AdminProductsProvider());
+  getIt.registerLazySingleton<AdminProductsRepository>(() =>
+      AdminProductsRepository(
+          adminProductsProvider: getIt<AdminProductsProvider>()));
 }

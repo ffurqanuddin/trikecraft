@@ -8,7 +8,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:one_context/one_context.dart';
 import 'package:trikecraft/admin/data/repository/admin_orders_repository.dart';
+import 'package:trikecraft/admin/data/repository/admin_products_repository.dart';
 import 'package:trikecraft/admin/logic/admin_bike_order/admin_bike_orders_cubit.dart';
+import 'package:trikecraft/admin/logic/admin_product/admin_product_cubit.dart';
 import 'package:trikecraft/admin/logic/admin_users_data/admin_users_data_cubit.dart';
 import 'package:trikecraft/admin/logic/user_feedback/user_feedback_cubit.dart';
 import 'package:trikecraft/base/routes/app_router.dart';
@@ -140,6 +142,10 @@ class MyApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) => PaymentCubit(),
+        ),
+        BlocProvider(
+          create: (context) => AdminProductCubit(
+              adminProductsRepository: getIt<AdminProductsRepository>()),
         ),
       ],
       child: ScreenUtilInit(

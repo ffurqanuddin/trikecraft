@@ -232,7 +232,7 @@ class OtherOptionsTab extends StatelessWidget {
           icon: FontAwesomeIcons.shop,
           color: Colors.grey[900]!,
           onTap: () {
-             Navigator.pushNamed(context, AppRoutes.adminAddProductRoute);
+             Navigator.pushNamed(context, AppRoutes.adminProductsRoute);
           },
         ),
         Gap(8),

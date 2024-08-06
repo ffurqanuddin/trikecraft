@@ -37,6 +37,9 @@ class BikeModel {
     required this.company,
   });
 
+
+  
+
   // Factory method to create a BikeModel from Firestore data
   factory BikeModel.fromFirestore(Map<String, dynamic> data) {
     return BikeModel(
@@ -82,4 +85,46 @@ class BikeModel {
       'company': company,
     };
   }
+
+
+   BikeModel copyWith({
+    String? tyreSize,
+    String? engineCc,
+    bool? roof,
+    String? color,
+    String? bikeId,
+    bool? available,
+    String? picture,
+    String? seats,
+    String? brake,
+    String? transmission,
+    String? kick,
+    String? price,
+    String? extraDetail,
+    String? model,
+    bool? selfStart,
+    String? gear,
+    String? company,
+  }) {
+    return BikeModel(
+      tyreSize: tyreSize ?? this.tyreSize,
+      engineCc: engineCc ?? this.engineCc,
+      roof: roof ?? this.roof,
+      color: color ?? this.color,
+      bikeId: bikeId ?? this.bikeId,
+      available: available ?? this.available,
+      picture: picture ?? this.picture,
+      seats: seats ?? this.seats,
+      brake: brake ?? this.brake,
+      transmission: transmission ?? this.transmission,
+      kick: kick ?? this.kick,
+      price: price ?? this.price,
+      extraDetail: extraDetail ?? this.extraDetail,
+      model: model ?? this.model,
+      selfStart: selfStart ?? this.selfStart,
+      gear: gear ?? this.gear,
+      company: company ?? this.company,
+    );
+  }
 }
+

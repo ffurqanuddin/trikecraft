@@ -32,7 +32,7 @@ class AppRoutes {
 
   static const String forgotPasswordRoute = '/forgot_password';
   static const String adminProductsRoute = '/admin_products';
-  static const String adminAddProductRoute = '/admin_add_product';
+  static const String adminAddNewProductRoute = '/admin_add_product';
 
 
 }
