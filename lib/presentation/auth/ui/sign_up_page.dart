@@ -78,6 +78,9 @@ class _SignUpPageState extends State<SignUpPage> {
                   message: state.errorMessage,
                 ),
               );
+              // Close all dialogs and progress indicators
+              Navigator.of(context, rootNavigator: true)
+                  .popUntil((route) => route.isFirst);
             }
 
             if(state is AuthSuccessLogOutState){

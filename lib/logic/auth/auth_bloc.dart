@@ -39,6 +39,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       if (user != null) {
         await _handleSuccessfulSignIn(user, event.email);
         emit(AuthSuccessState());
+        
       } else {
         emit(AuthFailureState(errorMessage: 'Sign in failed'));
       }
@@ -46,7 +47,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       emit(AuthFailureState(errorMessage: _getFirebaseAuthErrorMessage(e)));
     } catch (e) {
       emit(AuthFailureState(errorMessage: 'An unexpected error occurred'));
-      OneContext().pop();
     }
   }
 
@@ -122,6 +122,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
         // Set the user as logged in using Hive storage
         await MyHiveBoxes.settingBox.put(MyHiveKeys.userIsLoggedIn, true);
         emit(AuthSuccessState());
+
       } else {
         // If sign-up fails, emit failure state with an error message
         emit(AuthFailureState(errorMessage: 'Sign up failed'));
@@ -165,8 +166,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       }
     } catch (e) {
       emit(AuthFailureState(errorMessage: e.toString()));
-      OneContext().pop();
-      OneContext().pop();
     }
   }
 
@@ -183,14 +182,13 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           await MyHiveBoxes.settingBox.delete(MyHiveKeys.userEmailHiveKey);
           await MyHiveBoxes.settingBox.delete(MyHiveKeys.userProfilePicHiveKey);
 
-          OneContext().pushNamedAndRemoveUntil(
+          Navigator.pushNamedAndRemoveUntil(
+            event.context,
             AppRoutes.signInRoute,
             (route) => false,
           );
-          OneContext().hideOverlay();
 
           emit(AuthSuccessLogOutState());
-          emit(AuthInitialState());
         },
       );
     } catch (e) {

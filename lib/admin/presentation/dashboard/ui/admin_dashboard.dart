@@ -145,7 +145,7 @@ class _AdminDashboardPageState extends State<AdminDashboardPage>
                       onPressed: () {
                         context
                             .read<AuthBloc>()
-                            .add(LogOutEvent());
+                            .add(LogOutEvent(context: context));
                       },
                       label: Text("LogOut Now"))
                 ],

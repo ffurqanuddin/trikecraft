@@ -79,19 +79,22 @@ class _SignUpPageState extends State<SignInPage> {
                   AppRoutes.mainRoute,
                   (route) => false,
                 );
+                // Close all dialogs and progress indicators
+              Navigator.of(context, rootNavigator: true)
+                  .popUntil((route) => route.isFirst);
               }
             }
 
             if (state is AuthFailureState) {
-              OneContext().hideProgressIndicator();
-              OneContext().hideOverlay();
-
               Fluttertoast.showToast(
                 msg: state.errorMessage,
                 gravity: ToastGravity.BOTTOM,
                 backgroundColor: Colors.red,
                 textColor: Colors.white,
               );
+              // Close all dialogs and progress indicators
+              Navigator.of(context, rootNavigator: true)
+                  .popUntil((route) => route.isFirst);
             }
 
             if (state is AuthLoadingState) {
@@ -269,9 +272,10 @@ class _SignUpPageState extends State<SignInPage> {
     print("\nPassword is : " + password);
     if (_formKey.currentState!.validate()) {
       if (email.isValidEmail()) {
-        context
-            .read<AuthBloc>()
-            .add(SignInWithEmailEvent(email: email, password: password,));
+        context.read<AuthBloc>().add(SignInWithEmailEvent(
+              email: email,
+              password: password,
+            ));
       } else {
         showTopSnackBar(
           Overlay.of(context),

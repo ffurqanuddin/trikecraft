@@ -152,8 +152,8 @@ class MyApp extends StatelessWidget {
               onGenerateRoute: AppRouter.generateRoute,
               initialRoute: AppRoutes.splashRoute,
               // Use OneContext for global access to BuildContext
-              builder: OneContext().builder,
-              navigatorKey: OneContext().key,
+              // builder: OneContext().builder,
+              // navigatorKey: OneContext().key,
             );
           },
         ),
