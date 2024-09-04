@@ -19,9 +19,9 @@ class InfoBox extends StatelessWidget {
         text,
         textAlign: TextAlign.center,
         overflow: TextOverflow.ellipsis,
-        style: const TextStyle(
+        style: TextStyle(
           color: Colors.white,
-          fontSize: 17,
+          fontSize: 11.sp,
           fontWeight: FontWeight.bold,
         ),
       ),

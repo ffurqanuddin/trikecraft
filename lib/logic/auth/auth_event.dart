@@ -38,9 +38,8 @@ class AuthWithGoogleEvent extends AuthEvent {}
 class ForgotPasswordEvent extends AuthEvent {}
 
 class LogOutEvent extends AuthEvent {
-  final BuildContext context;
 
-  LogOutEvent({required this.context});
+  LogOutEvent();
      @override
-   List<Object> get props => [context];
+   List<Object> get props => [];
 }

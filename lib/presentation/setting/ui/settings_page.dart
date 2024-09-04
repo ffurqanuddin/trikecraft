@@ -142,7 +142,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             onPressed: () {
                               context
                                   .read<AuthBloc>()
-                                  .add(LogOutEvent(context: context));
+                                  .add(LogOutEvent());
                             },
                             label: Text("LogOut Now"))
                       ],

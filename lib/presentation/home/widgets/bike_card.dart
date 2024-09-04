@@ -31,8 +31,9 @@ class BikeCard extends StatelessWidget {
                 alignment: Alignment.bottomCenter,
                 child: FadeInUp(
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20.sp, vertical: 8.sp),
-                    width: 0.9.sw,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 20.sp, vertical: 8.sp),
+                    width: 1.sw,
                     decoration: BoxDecoration(
                       color: Theme.of(context).primaryColor,
                       borderRadius: BorderRadius.circular(10),
@@ -53,22 +54,24 @@ class BikeCard extends StatelessWidget {
                   imageUrl: bike.picture,
                   fit: BoxFit.cover,
                   filterQuality: FilterQuality.high,
-                  placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) =>
+                      const Center(child: Icon(Icons.error)),
                 ),
               ),
               Positioned(
                 top: 0,
                 left: 0,
-                width: 0.4445.sw,
+                width: 0.35.sw,
                 child: FadeInLeft(
                   child: InfoBox(text: "${bike.company}"),
                 ),
               ),
               Positioned(
-                top: 30.sp,
+                top: 27.sp,
                 left: 0,
-                width: 0.4445.sw,
+                width: 0.35.sw,
                 child: FadeInDown(
                   child: InfoBox(text: "Engine ${bike.engineCc} CC"),
                 ),
@@ -76,15 +79,15 @@ class BikeCard extends StatelessWidget {
               Positioned(
                 top: 0,
                 right: 0,
-                width: 0.45.sw,
+                width: 0.35.sw,
                 child: FadeInRight(
                   child: InfoBox(text: "Model ${bike.model}"),
                 ),
               ),
               Positioned(
-                top: 30.sp,
+                top: 27.sp,
                 right: 0,
-                width: 0.45.sw,
+                width: 0.35.sw,
                 child: FadeInDown(
                   child: InfoBox(text: "Seats Capacity ${bike.seats}"),
                 ),

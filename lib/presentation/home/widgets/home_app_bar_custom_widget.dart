@@ -71,12 +71,12 @@ AppBar HomeAppBar(context) {
                 ),
               ),
             ),
-            IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  FontAwesomeIcons.filter,
-                  color: Colors.white,
-                ))
+            // IconButton(
+            //     onPressed: () {},
+            //     icon: Icon(
+            //       FontAwesomeIcons.filter,
+            //       color: Colors.white,
+            //     ))
           ],
         ),
       ),

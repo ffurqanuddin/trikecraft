@@ -69,10 +69,11 @@ dependencies:
   firebase_storage: ^12.1.1
   device_info_plus: ^10.1.0
   permission_handler: ^11.3.1
-  easypaisa_flutter: ^1.0.3
+  # easypaisa_flutter: ^1.0.3
   fluttertoast: ^8.2.6
   rxdart: ^0.28.0
   uuid: ^4.4.2
+  carousel_slider: ^5.0.0
   # loop_page_view: ^1.2.5
   # awesome_dialog: ^3.2.1
 

@@ -50,8 +50,6 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     }
   }
 
-  
-
   Future<void> _handleSuccessfulSignIn(User user, String email) async {
     if (await firestoreRepository.checkUserIsAdmin()) {
       await _setAdminPreferences();
@@ -185,11 +183,12 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
           await MyHiveBoxes.settingBox.delete(MyHiveKeys.userEmailHiveKey);
           await MyHiveBoxes.settingBox.delete(MyHiveKeys.userProfilePicHiveKey);
 
-          Navigator.pushNamedAndRemoveUntil(
-            event.context,
+          OneContext().pushNamedAndRemoveUntil(
             AppRoutes.signInRoute,
             (route) => false,
           );
+          OneContext().hideOverlay();
+
           emit(AuthSuccessLogOutState());
           emit(AuthInitialState());
         },

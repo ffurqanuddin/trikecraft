@@ -28,7 +28,7 @@ class GreetingTextWidget extends StatelessWidget {
               ),
             ),
             Text(
-              userName() ?? "User",
+              userName(),
               style: TextStyle(fontSize: 16, fontFamily: AppFonts.poppins),
             )
           ],
@@ -38,6 +38,6 @@ class GreetingTextWidget extends StatelessWidget {
   }
 
   String userName() {
-    return MyHiveBoxes.settingBox.get(MyHiveKeys.userNameHiveKey);
+    return MyHiveBoxes.settingBox.get(MyHiveKeys.userNameHiveKey, defaultValue: "User");
   }
 }

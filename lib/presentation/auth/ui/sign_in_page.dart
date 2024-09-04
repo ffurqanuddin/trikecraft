@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
+import 'package:one_context/one_context.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:trikecraft/base/di/dependency_injection.dart';
@@ -82,6 +83,9 @@ class _SignUpPageState extends State<SignInPage> {
             }
 
             if (state is AuthFailureState) {
+              OneContext().hideProgressIndicator();
+              OneContext().hideOverlay();
+
               Fluttertoast.showToast(
                 msg: state.errorMessage,
                 gravity: ToastGravity.BOTTOM,
@@ -267,7 +271,7 @@ class _SignUpPageState extends State<SignInPage> {
       if (email.isValidEmail()) {
         context
             .read<AuthBloc>()
-            .add(SignInWithEmailEvent(email: email, password: password));
+            .add(SignInWithEmailEvent(email: email, password: password,));
       } else {
         showTopSnackBar(
           Overlay.of(context),

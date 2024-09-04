@@ -1,6 +1,4 @@
 import 'dart:async';
-
-import 'package:easypaisa_flutter/easypaisa_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +21,7 @@ import 'package:trikecraft/data/repository/firestore_order_data_repository.dart'
 import 'package:trikecraft/data/repository/firestore_user_data_repository.dart';
 import 'package:trikecraft/logic/auth/auth_bloc.dart';
 import 'package:trikecraft/logic/available_pageview_changed/available_page_view_changed_cubit.dart';
+import 'package:trikecraft/logic/carouselslider_indicator/carousel_slider_indicator_cubit.dart';
 import 'package:trikecraft/logic/change_user_profile/change_user_profile_cubit.dart';
 import 'package:trikecraft/logic/check_internet/check_internet_bloc.dart';
 import 'package:trikecraft/logic/current_user/current_user_bloc.dart';
@@ -58,17 +57,6 @@ void main() async {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-
-    // EasypaisaFlutter.initialize(
-    //   // 'username', //merchant account username
-    //   // 'password', //merchant account password
-    //   // 'storeId', //merchant storeId
-    //   'rideoptions',
-    //   'd7d530ae300bf32090a2a0bc932ac708',
-    //   '25056',
-    //   true, //is testing account or not
-    //   AccountType.MA, //Merchant account type either Mobile account or OTC
-    // );
 
     runApp(MyApp());
   }, (dynamic error, dynamic stack) {
@@ -147,6 +135,9 @@ class MyApp extends StatelessWidget {
           create: (context) => AdminProductCubit(
               adminProductsRepository: getIt<AdminProductsRepository>()),
         ),
+          BlocProvider(
+          create: (context) => CarouselSliderIndicatorCubit(),
+        ),
       ],
       child: ScreenUtilInit(
         splitScreenMode: true,
@@ -160,6 +151,9 @@ class MyApp extends StatelessWidget {
                   : AppThemes.LightThemeList[state.themeIndex],
               onGenerateRoute: AppRouter.generateRoute,
               initialRoute: AppRoutes.splashRoute,
+              // Use OneContext for global access to BuildContext
+              builder: OneContext().builder,
+              navigatorKey: OneContext().key,
             );
           },
         ),

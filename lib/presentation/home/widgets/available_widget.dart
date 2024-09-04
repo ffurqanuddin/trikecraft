@@ -1,9 +1,12 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:trikecraft/logic/available_pageview_changed/available_page_view_changed_cubit.dart';
+import 'package:trikecraft/logic/carouselslider_indicator/carousel_slider_indicator_cubit.dart';
+import 'package:trikecraft/logic/theme/theme_cubit.dart';
 import 'package:trikecraft/presentation/home/widgets/error_message.dart';
 import 'package:trikecraft/presentation/home/widgets/loaded_bikes_view.dart';
 import 'package:trikecraft/presentation/home/widgets/loading_shimmer_of_home_bike_card.dart';
@@ -18,7 +21,6 @@ class AvailableWidget extends StatefulWidget {
 }
 
 class _AvailableWidgetState extends State<AvailableWidget> {
-  late PageController _pageViewController;
   late int _pageIndex;
 
   @override
@@ -28,56 +30,68 @@ class _AvailableWidgetState extends State<AvailableWidget> {
         .read<AllAvailableBikesBloc>()
         .add(FetchAllAvailableBikesListEvent());
     _pageIndex = 0;
-    _pageViewController = PageController(initialPage: _pageIndex);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<AllAvailableBikesBloc, AllAvailableBikesState>(
-      builder: (context, state) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Gap(0.02.sh),
+    return BlocBuilder<ThemeCubit, ThemeState>(
+      builder: (context, themeState) {
+        return BlocBuilder<AllAvailableBikesBloc, AllAvailableBikesState>(
+          builder: (context, state) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Gap(0.02.sh),
 
-            ///------------ Heading ------------///
-            const TopHeading(),
+                ///------------ Heading ------------///
+                const TopHeading(),
 
-            Gap(0.01.sh),
+                Gap(0.01.sh),
 
-            if (state is AllAvailableBikesLoadingState)
-              const LoadingShimmerOfHomeBikeCard(),
+                if (state is AllAvailableBikesLoadingState)
+                  const LoadingShimmerOfHomeBikeCard(),
 
-            if (state is AllAvailableBikesSuccessState)
-              LoadedBikesView(
-                state: state,
-                pageViewController: _pageViewController,
-                onPageChanged: onPageChanged,
-              ),
-
-            if (state is AllAvailableBikesSuccessState)
-              Padding(
-                padding: EdgeInsets.all(10.sp),
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: SmoothPageIndicator(
-                    controller: _pageViewController,
-                    count: state.bikes.length,
-                    axisDirection: Axis.horizontal,
-                    effect: ExpandingDotsEffect(
-                      activeDotColor: Theme.of(context).primaryColor,
-                    ),
+                if (state is AllAvailableBikesSuccessState)
+                  LoadedBikesView(
+                    state: state,
+                    onPageChanged: onPageChanged,
                   ),
-                ),
-              ),
 
-            if (state is AllAvailableBikesErrorState)
-              ErrorMessage(
-                  state: state,
-                  onRefresh: () {
-                    initState();
-                  }),
-          ],
+                if (state is AllAvailableBikesSuccessState)
+                 
+
+                  ///----------Carousel Indicators --------------------///
+               BlocBuilder<CarouselSliderIndicatorCubit,
+                      CarouselSliderIndicatorState>(
+                    builder: (context, caroIndicatorState) {
+                      return Container(
+                        height: 20,
+                        child: Center(
+                          child: ListView.builder(
+                            scrollDirection: Axis.horizontal,
+                            shrinkWrap: true,
+                            itemCount: state.bikes.length,
+                            itemBuilder: (context, index) => CircleAvatar(
+                              backgroundColor: caroIndicatorState.index == index
+                                  ? Theme.of(context).primaryColor
+                                  : Colors.grey,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  
+
+                if (state is AllAvailableBikesErrorState)
+                  ErrorMessage(
+                      state: state,
+                      onRefresh: () {
+                        initState();
+                      }),
+              ],
+            );
+          },
         );
       },
     );

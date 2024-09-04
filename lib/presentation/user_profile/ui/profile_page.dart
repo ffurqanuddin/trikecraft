@@ -23,14 +23,17 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    profileImageUrl = profileImageFromHive() ?? "";
-    _nameController = TextEditingController(text: profileNameFromHive() ?? "");
+    profileImageUrl = profileImageFromHive();
+    _nameController = TextEditingController(text: profileNameFromHive());
   }
 
   String profileImageFromHive() =>
-      MyHiveBoxes.settingBox.get(MyHiveKeys.userProfilePicHiveKey);
-  String profileNameFromHive() =>
-      MyHiveBoxes.settingBox.get(MyHiveKeys.userNameHiveKey);
+      MyHiveBoxes.settingBox.get(MyHiveKeys.userProfilePicHiveKey,
+          defaultValue:
+              "https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=600") ??
+      "https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=600";
+  String profileNameFromHive() => MyHiveBoxes.settingBox
+      .get(MyHiveKeys.userNameHiveKey, defaultValue: "User");
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +48,8 @@ class _ProfilePageState extends State<ProfilePage> {
       body: BlocConsumer<ChangeUserProfileCubit, ChangeUserProfileState>(
         listener: (context, state) {
           if (state is ChangeUserProfileSuccessfullyUpdatedState) {
-            MySnackbars.showSimpleSnackbar(context, message: "Profile is updated");
+            MySnackbars.showSimpleSnackbar(context,
+                message: "Profile is updated");
             Navigator.pop(context);
           }
 
@@ -109,12 +113,14 @@ class _ProfilePageState extends State<ProfilePage> {
                         decoration: BoxDecoration(
                           color: Colors.white.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: Colors.white.withOpacity(0.2)),
+                          border:
+                              Border.all(color: Colors.white.withOpacity(0.2)),
                         ),
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                         child: TextField(
                           controller: _nameController,
-                          onTapOutside: (p){
+                          onTapOutside: (p) {
                             FocusManager.instance.primaryFocus?.unfocus();
                           },
                           textAlign: TextAlign.center,
@@ -134,21 +140,25 @@ class _ProfilePageState extends State<ProfilePage> {
                       ElevatedButton(
                         onPressed: () {
                           if (_nameController.text.isNotEmpty) {
-                            context.read<ChangeUserProfileCubit>().changeUserName(
-                                username: _nameController.text.toString().trim());
+                            context
+                                .read<ChangeUserProfileCubit>()
+                                .changeUserName(
+                                    username:
+                                        _nameController.text.toString().trim());
                           }
                           if (temporaryPickedImage != null) {
                             context
                                 .read<ChangeUserProfileCubit>()
-                                .changeUserProfilePicture(pickedFile: temporaryPickedImage!);
+                                .changeUserProfilePicture(
+                                    pickedFile: temporaryPickedImage!);
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 12),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),
-                          
                         ),
                         child: state is ChangeUserProfileLoadingState
                             ? CircularProgressIndicator(
