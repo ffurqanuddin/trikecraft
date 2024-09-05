@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:trikecraft/logic/available_pageview_changed/available_page_view_changed_cubit.dart';
 import 'package:trikecraft/logic/carouselslider_indicator/carousel_slider_indicator_cubit.dart';
 import 'package:trikecraft/logic/theme/theme_cubit.dart';
@@ -58,30 +57,37 @@ class _AvailableWidgetState extends State<AvailableWidget> {
                   ),
 
                 if (state is AllAvailableBikesSuccessState)
-                 
 
                   ///----------Carousel Indicators --------------------///
-               BlocBuilder<CarouselSliderIndicatorCubit,
+                  BlocBuilder<CarouselSliderIndicatorCubit,
                       CarouselSliderIndicatorState>(
                     builder: (context, caroIndicatorState) {
                       return Container(
-                        height: 20,
+                        height: 12,
                         child: Center(
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
                             shrinkWrap: true,
                             itemCount: state.bikes.length,
-                            itemBuilder: (context, index) => CircleAvatar(
-                              backgroundColor: caroIndicatorState.index == index
-                                  ? Theme.of(context).primaryColor
-                                  : Colors.grey,
-                            ),
+                            itemBuilder: (context, index) => caroIndicatorState
+                                        .index ==
+                                    index
+                                ? Container(
+                                    height: 10,
+                                    width: 40,
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(40),
+                                        color: Theme.of(context).primaryColor),
+                                  )
+                                : CircleAvatar(
+                                    radius: 13.sp,
+                                    backgroundColor: Colors.grey,
+                                  ),
                           ),
                         ),
                       );
                     },
                   ),
-                  
 
                 if (state is AllAvailableBikesErrorState)
                   ErrorMessage(

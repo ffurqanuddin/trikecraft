@@ -1,6 +1,8 @@
 import 'package:animate_do/animate_do.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:gap/gap.dart';
 import 'package:trikecraft/common/glass_gradient_card_widget.dart';
 import 'package:trikecraft/utils/email_validator_extension.dart';
@@ -85,10 +87,14 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
 
   //------------- M E T H O D S ---------------///
 
-  void submitButtonMethod() {
+  void submitButtonMethod() async {
     final email = _emailController.text.toString().trim();
     if (email.isValidEmail()) {
-      print("The email is valid.");
+      await FirebaseAuth.instance.sendPasswordResetEmail(email: email.trim(),);
+      Fluttertoast.showToast(
+          msg:
+              "Email has been sent to your email, please check your inbox/spam box");
+      Navigator.pop(context);
     } else {
       print("The email is invalid.");
     }

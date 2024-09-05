@@ -152,22 +152,22 @@ class AboutPage extends StatelessWidget {
                                   AppSvgs.sarhadUniversityLogoForLightMode),
                             ),
                           ),
-                          Link(
-                            uri: Uri.parse(
-                                "https://www.linkedin.com/company/lyrilab"),
-                            target: LinkTarget.blank,
-                            builder: (context, followLink) => InkWell(
-                              onTap: () {
-                                followLink!();
-                              },
-                              child: SvgPicture.asset(
-                                height: 0.12.sh,
-                                theme.brightness == Brightness.dark
-                                    ? AppSvgs.lyrilabLogoForDarkMode
-                                    : AppSvgs.lyrilabLogoForLightMode,
-                              ),
-                            ),
-                          ),
+                          // Link(
+                          //   uri: Uri.parse(
+                          //       "https://www.linkedin.com/company/lyrilab"),
+                          //   target: LinkTarget.blank,
+                          //   builder: (context, followLink) => InkWell(
+                          //     onTap: () {
+                          //       followLink!();
+                          //     },
+                          //     child: SvgPicture.asset(
+                          //       height: 0.12.sh,
+                          //       theme.brightness == Brightness.dark
+                          //           ? AppSvgs.lyrilabLogoForDarkMode
+                          //           : AppSvgs.lyrilabLogoForLightMode,
+                          //     ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ],

@@ -52,7 +52,7 @@ class BikeCard extends StatelessWidget {
               Positioned.fill(
                 child: CachedNetworkImage(
                   imageUrl: bike.picture,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain,
                   filterQuality: FilterQuality.high,
                   placeholder: (context, url) =>
                       const Center(child: CircularProgressIndicator()),
